@@ -1,0 +1,51 @@
+appId: 'lapsuslauncher'
+productName: 'Lapsus Launcher'
+artifactName: '${productName}-setup-${version}.${ext}'
+
+copyright: 'Copyright © 2023-2024 ManucrackYT'
+
+asar: true
+compression: 'maximum'
+
+files:
+  - '!{dist,.gitignore,.vscode,docs,dev-app-update.yml,.nvmrc,.eslintrc.json}'
+
+extraResources:
+  - 'libraries'
+
+# Windows Configuration
+win: 
+  target: 
+    - target: 'nsis'
+      arch: 'x64'
+
+# Windows Installer Configuration
+nsis:
+  oneClick: false
+  perMachine: false
+  allowElevation: true
+  allowToChangeInstallationDirectory: true
+
+# macOS Configuration
+mac:
+  target:
+    - target: 'dmg'
+      arch:
+        - 'x64'
+        - 'arm64'
+  artifactName: '${productName}-setup-${version}-${arch}.${ext}'
+  category: 'public.app-category.games'
+
+# Linux Configuration
+linux: 
+  target: 'AppImage'
+  maintainer: 'ManucrackYT'
+  vendor: 'ManucrackYT'
+  synopsis: 'Lapsus Launcher'
+  description: 'Lapsus Launcher is the next generation launcher for Minecraft, with advanced design'
+  category: 'Game'
+
+
+directories:
+  buildResources: 'build'
+  output: 'dist'
