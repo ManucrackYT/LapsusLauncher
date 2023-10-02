@@ -2,7 +2,7 @@
 
 <h1 align="center">Lapsus Launcher</h1>
 
-[<p align="center">
+<p align="center">
 [<img src="https://img.shields.io/github/downloads/ManucrackYT/LapsusLauncher/total.svg?style=for-the-badge" alt="downloads">](https://github.com/ManucrackYT/LapsusLauncher/releases) <img src="https://forthebadge.com/images/badges/winter-is-coming.svg"  height="28px" alt="winter-is-coming"></p>
 
 <p align="center">Join modded servers without worrying about installing Java, Forge, or other mods. We'll handle that for you.</p>
