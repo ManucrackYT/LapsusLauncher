@@ -30,7 +30,6 @@
 
 This is not an exhaustive list. Download and install the launcher to gauge all it can do!
 
-#### Need Help? [Check the wiki.][wiki]
 
 #### Like the project? Leave a ⭐ star on the repository!
 
