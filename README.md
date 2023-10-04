@@ -7,8 +7,8 @@
 
 <p align="center">Lapsus Launcher is the next end generation Minecraft Launcher with an advanced design to bring all the latest Minecraft versions for you.</p>
 
-![Screenshot 1](https://i.imgur.com/6o7SmH6.png)
-![Screenshot 2](https://i.imgur.com/x3B34n1.png)
+![Screenshot 1](https://cdn.discordapp.com/attachments/1158764544076812429/1159127602431271024/image1.png?ex=652fe4b3&is=651d6fb3&hm=f5f8ebe22ae45b12e1826c3b13b954e20123693d495c5bee9b19199c6259e34f&)
+![Screenshot 2](https://cdn.discordapp.com/attachments/1158764544076812429/1159127601323978895/image2.png?ex=652fe4b3&is=651d6fb3&hm=de6afe78047dc4ec0cdd3be07fb2a1c1207f565c3287a000c9fd96bc00a6f3a9&)
 
 ## Features
 
