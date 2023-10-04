@@ -8,10 +8,10 @@ const net = require('net')
  * @returns {Promise.<Object>} A promise which resolves to an object containing
  * status information.
  */
-exports.getStatus = function(address = minecraft.net, port = 80){ // Change address
+exports.getStatus = function(address, port = 25565){
 
     if(port == null || port == ''){
-        port = 80
+        port = 25565
     }
     if(typeof port === 'string'){
         port = parseInt(port)
