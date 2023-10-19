@@ -2,6 +2,8 @@ const { DistributionAPI } = require('lapsus-core/common')
 
 const ConfigManager = require('./configmanager')
 
+// Listening on node 2
+
 exports.REMOTE_DISTRO_URL = 'http://fr02.planethost.xyz:3002/distribution.json'
 
 const api = new DistributionAPI(
