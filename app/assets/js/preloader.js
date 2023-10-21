@@ -8,7 +8,7 @@ const { DistroAPI }  = require('./distromanager')
 const LangLoader     = require('./langloader')
 const { LoggerUtil } = require('lapsus-core')
 // eslint-disable-next-line no-unused-vars
-const { HeliosDistribution } = require('lapsus-core/common')
+const { LapsusDistribution } = require('lapsus-core/common')
 
 const logger = LoggerUtil.getLogger('Preloader')
 
@@ -27,7 +27,7 @@ LangLoader.loadLanguage('en_US')
 
 /**
  * 
- * @param {HeliosDistribution} data 
+ * @param {LapsusDistribution} data 
  */
 function onDistroLoad(data){
     if(data != null){
@@ -44,10 +44,10 @@ function onDistroLoad(data){
 
 // Ensure Distribution is downloaded and cached.
 DistroAPI.getDistribution()
-    .then(heliosDistro => {
+    .then(lapsusDistro => {
         logger.info('Loaded distribution index.')
 
-        onDistroLoad(heliosDistro)
+        onDistroLoad(lapsusDistro)
     })
     .catch(err => {
         logger.info('Failed to load an older version of the distribution index.')

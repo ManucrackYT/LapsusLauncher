@@ -4,7 +4,7 @@ const crypto                = require('crypto')
 const fs                    = require('fs-extra')
 const { LoggerUtil }        = require('lapsus-core')
 const { getMojangOS, isLibraryCompatible, mcVersionAtLeast }  = require('lapsus-core/common')
-const { Type }              = require('helios-distribution-types')
+const { Type }              = require('lapsus-distribution-types')
 const os                    = require('os')
 const path                  = require('path')
 
