@@ -55,6 +55,10 @@ If you download from the [Releases](https://github.com/ManucrackYT/LapsusLaunche
 | macOS arm64 | `Lapsus-Launcher-setup-VERSION-arm64.dmg` |
 | Linux x64 | `Lapsus-Launcher-setup-VERSION.AppImage` |
 
+## Looking for the Status Page?
+
+[**Visit our status website here →**](https://ast3risk-ops.github.io/lapsus-status)
+
 ## Console
 
 To open the console, use the following keybind.
