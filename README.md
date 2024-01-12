@@ -3,8 +3,6 @@
 <h1 align="center">Lapsus Launcher</h1>
 
 
-[<p align="center"><img src="https://img.shields.io/github/downloads/ManucrackYT/LapsusLauncher/total.svg?style=for-the-badge" alt="downloads">](https://github.com/ManucrackYT/LapsusLauncher/releases) <img src="https://forthebadge.com/images/badges/winter-is-coming.svg"  height="28px" alt="winter-is-coming"></p>
-
 <p align="center">Lapsus Launcher is the next end generation Minecraft Launcher with an advanced design to bring all the latest Minecraft versions for you.</p>
 
 ![Screenshot 1](https://cdn.discordapp.com/attachments/1158764544076812429/1159127602431271024/image1.png?ex=652fe4b3&is=651d6fb3&hm=f5f8ebe22ae45b12e1826c3b13b954e20123693d495c5bee9b19199c6259e34f&)
@@ -72,7 +70,7 @@ Ensure that you have the console tab selected. Do not paste anything into the co
 
 The best way to contact the developers is on Discord.
 
-[![discord](https://discordapp.com/api/guilds/954138561509203978/embed.png?style=banner3)][discord]
+[![discord](https://discordapp.com/api/guilds/778310063839903786/embed.png?style=banner3)](https://discord.gg/hNJndxkh72)
 
 ---
 
