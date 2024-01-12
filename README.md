@@ -2,7 +2,7 @@
 
 <h1 align="center">Lapsus Launcher</h1>
 
-[<p align="center"><img src="https://img.shields.io/github/downloads/ManucrackYT/LapsusLauncher/total.svg?style=for-the-badge" alt="downloads">]
+<p align="center"><img src="https://img.shields.io/github/downloads/ManucrackYT/LapsusLauncher/total.svg?style=for-the-badge" alt="downloads">
 <p align="center">Lapsus Launcher is the next end generation Minecraft Launcher with an advanced design to bring all the latest Minecraft versions for you.</p>
 
 ![Screenshot 1](https://cdn.discordapp.com/attachments/1158764544076812429/1159127602431271024/image1.png?ex=652fe4b3&is=651d6fb3&hm=f5f8ebe22ae45b12e1826c3b13b954e20123693d495c5bee9b19199c6259e34f&)
