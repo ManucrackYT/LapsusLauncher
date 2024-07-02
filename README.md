@@ -1,14 +1,15 @@
-<p align="center"><img src="./app/assets/images/SealCircle.png" width="150px" height="150px" alt="aventium softworks"></p>
+<p align="center"><img src="./app/assets/images/SealCircle.png" width="150px" height="150px" alt="Lapsus Launcher"></p>
 
 <h1 align="center">Lapsus Launcher</h1>
 
 <p align="center"><img src="https://img.shields.io/github/downloads/ManucrackYT/LapsusLauncher/total.svg?style=for-the-badge" alt="downloads">
 <p align="center">Lapsus Launcher is the next end generation Minecraft Launcher with an advanced design to bring all the latest Minecraft versions for you.</p>
 
-![Screenshot 1](https://cdn.discordapp.com/attachments/1158764544076812429/1159127602431271024/image1.png?ex=652fe4b3&is=651d6fb3&hm=f5f8ebe22ae45b12e1826c3b13b954e20123693d495c5bee9b19199c6259e34f&)
-![Screenshot 2](https://cdn.discordapp.com/attachments/1158764544076812429/1159127601323978895/image2.png?ex=652fe4b3&is=651d6fb3&hm=de6afe78047dc4ec0cdd3be07fb2a1c1207f565c3287a000c9fd96bc00a6f3a9&)
+<p align="center"><img src="https://github.com/ManucrackYT/LapsusLauncher/assets/71397795/2777d0ba-d4ee-476e-a5a6-8f6183a16526"></p>
+
 
 ## Features
+
 
 * 🔒 Full account management.
   * Add multiple accounts and easily switch between them.
