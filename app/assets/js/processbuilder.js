@@ -307,15 +307,10 @@ class ProcessBuilder {
 
     _processAutoConnectArg(args){
         if(ConfigManager.getAutoConnect() && this.server.rawServer.autoconnect){
-            if(mcVersionAtLeast('1.20', this.server.rawServer.minecraftVersion)){
-                args.push('--quickPlayMultiplayer')
-                args.push(`${this.server.hostname}:${this.server.port}`)
-            } else {
-                args.push('--server')
-                args.push(this.server.hostname)
-                args.push('--port')
-                args.push(this.server.port)
-            }
+            args.push('--server')
+            args.push(this.server.hostname)
+            args.push('--port')
+            args.push(this.server.port)
         }
     }
 
@@ -491,6 +486,7 @@ class ProcessBuilder {
                             break
                         case 'user_type':
                             val = this.authUser.type === 'microsoft' ? 'msa' : 'mojang'
+                            console.log(this.authUser.type)
                             break
                         case 'version_type':
                             val = this.versionData.type

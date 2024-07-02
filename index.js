@@ -125,7 +125,7 @@ ipcMain.on(MSFT_OPCODE.OPEN_LOGIN, (ipcEvent, ...arguments_) => {
     msftAuthViewSuccess = arguments_[0]
     msftAuthViewOnClose = arguments_[1]
     msftAuthWindow = new BrowserWindow({
-        title: LangLoader.queryJS('index.microsoftLoginTitle'),
+        title: 'Microsoft Login',
         backgroundColor: '#222222',
         width: 520,
         height: 600,
@@ -178,7 +178,7 @@ ipcMain.on(MSFT_OPCODE.OPEN_LOGOUT, (ipcEvent, uuid, isLastAccount) => {
     msftLogoutSuccess = false
     msftLogoutSuccessSent = false
     msftLogoutWindow = new BrowserWindow({
-        title: LangLoader.queryJS('index.microsoftLogoutTitle'),
+        title: 'Microsoft Logout',
         backgroundColor: '#222222',
         width: 520,
         height: 600,
@@ -227,8 +227,10 @@ let win
 function createWindow() {
 
     win = new BrowserWindow({
-        width: 980,
-        height: 552,
+        width: 1500,
+        minWidth: 1255,
+        height: 850,
+        minHeight: 730,
         icon: getPlatformIcon('SealCircle'),
         frame: false,
         webPreferences: {
@@ -236,7 +238,7 @@ function createWindow() {
             nodeIntegration: true,
             contextIsolation: false
         },
-        backgroundColor: '#171614'
+        backgroundColor: '#090909'
     })
     remoteMain.enable(win.webContents)
 

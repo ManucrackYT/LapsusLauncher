@@ -41,7 +41,6 @@ loginOptionsCancelButton.onclick = (e) => {
         // Clear login values (Mojang login)
         // No cleanup needed for Microsoft.
         loginUsername.value = ''
-        loginPassword.value = ''
         if(loginOptionsViewCancelHandler != null){
             loginOptionsViewCancelHandler()
             loginOptionsViewCancelHandler = null

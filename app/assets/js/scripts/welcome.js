@@ -6,4 +6,7 @@ document.getElementById('welcomeButton').addEventListener('click', e => {
     loginOptionsViewOnLoginSuccess = VIEWS.landing
     loginOptionsViewOnLoginCancel = VIEWS.loginOptions
     switchView(VIEWS.welcome, VIEWS.loginOptions)
-})
+
+        // Add code to reload the launcher here
+    window.location.reload();
+});

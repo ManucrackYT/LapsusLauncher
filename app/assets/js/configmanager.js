@@ -2,7 +2,6 @@ const fs   = require('fs-extra')
 const { LoggerUtil } = require('lapsus-core')
 const os   = require('os')
 const path = require('path')
-
 const logger = LoggerUtil.getLogger('ConfigManager')
 
 const sysRoot = process.env.APPDATA || (process.platform == 'darwin' ? process.env.HOME + '/Library/Application Support' : process.env.HOME)
@@ -78,13 +77,15 @@ function resolveSelectedRAM(ram) {
 const DEFAULT_CONFIG = {
     settings: {
         game: {
-            resWidth: 1280,
-            resHeight: 720,
+            resWidth: 1920,
+            resHeight: 1080,
             fullscreen: false,
             autoConnect: true,
             launchDetached: true
         },
         launcher: {
+            resWidth: 1920,
+            resHeight: 1080,
             allowPrerelease: false,
             dataDirectory: dataPath
         }
@@ -272,6 +273,17 @@ exports.getClientToken = function(){
  */
 exports.setClientToken = function(clientToken){
     config.clientToken = clientToken
+}
+
+exports.addAuthAccount = function(uuid, accessToken, username, displayName){
+    config.selectedAccount = uuid
+    config.authenticationDatabase[uuid] = {
+        accessToken,
+        username: username.trim(),
+        uuid: uuid.trim(),
+        displayName: displayName.trim()
+    }
+    return config.authenticationDatabase[uuid]
 }
 
 /**

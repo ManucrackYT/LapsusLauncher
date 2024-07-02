@@ -590,8 +590,8 @@ ipcRenderer.on(MSFT_OPCODE.REPLY_LOGOUT, (_, ...arguments_) => {
             })
             .finally(() => {
                 if(!isLastAccount) {
-                    switchView(getCurrentView(), VIEWS.settings, 500, 500)
-                }
+                    switchView(getCurrentView(), VIEWS.loginOptions, 500, 500)
+                                }
             })
 
     }
@@ -640,7 +640,7 @@ function populateAuthAccounts(){
 
         const accHtml = `<div class="settingsAuthAccount" uuid="${acc.uuid}">
             <div class="settingsAuthAccountLeft">
-                <img class="settingsAuthAccountImage" alt="${acc.displayName}" src="https://mc-heads.net/body/${acc.uuid}/60">
+            <img class="settingsAuthAccountImage" alt="${acc.displayName}" src="https://minotar.net/body/${acc.displayName}">
             </div>
             <div class="settingsAuthAccountRight">
                 <div class="settingsAuthAccountDetails">
@@ -900,7 +900,7 @@ function bindDropinModsRemoveButton(){
                 setOverlayContent(
                     Lang.queryJS('settings.dropinMods.deleteFailedTitle', { fullName }),
                     Lang.queryJS('settings.dropinMods.deleteFailedMessage'),
-                    Lang.queryJS('settings.dropinMods.okButton')
+                    Lang.queryJS('settings.okButton')
                 )
                 setOverlayHandler(null)
                 toggleOverlay(true)
@@ -955,7 +955,7 @@ function saveDropinModConfiguration(){
                         setOverlayContent(
                             Lang.queryJS('settings.dropinMods.failedToggleTitle'),
                             err.message,
-                            Lang.queryJS('settings.dropinMods.okButton')
+                            Lang.queryJS('settings.okButton')
                         )
                         setOverlayHandler(null)
                         toggleOverlay(true)
@@ -1453,7 +1453,7 @@ function populateAboutVersionInformation(){
  */
 function populateReleaseNotes(){
     $.ajax({
-        url: 'https://github.com/ManucrackYT/LapsusLauncher/releases.atom',
+        url: 'https://github.com/ci2bx/LunexLauncher/releases.atom',
         success: (data) => {
             const version = 'v' + remote.app.getVersion()
             const entries = $(data).find('entry')

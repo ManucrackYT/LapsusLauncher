@@ -15,47 +15,42 @@ const { RestResponseStatus } = require('lapsus-core/common')
 const { MojangRestAPI, mojangErrorDisplayable, MojangErrorCode } = require('lapsus-core/mojang')
 const { MicrosoftAuth, microsoftErrorDisplayable, MicrosoftErrorCode } = require('lapsus-core/microsoft')
 const { AZURE_CLIENT_ID }    = require('./ipcconstants')
+const uuid = require('uuid');
+const crypto = require('crypto');
+
 
 const log = LoggerUtil.getLogger('AuthManager')
 
 // Functions
 
 /**
- * Add a Mojang account. This will authenticate the given credentials with Mojang's
+ * Add a Mojang account. This will authenticate the given username with Mojang's
  * authserver. The resultant data will be stored as an auth account in the
  * configuration database.
  * 
  * @param {string} username The account username (email if migrated).
- * @param {string} password The account password.
  * @returns {Promise.<Object>} Promise which resolves the resolved authenticated account object.
  */
-exports.addMojangAccount = async function(username, password) {
+exports.addAccount = async function(username) {
     try {
-        const response = await MojangRestAPI.authenticate(username, password, ConfigManager.getClientToken())
-        console.log(response)
-        if(response.responseStatus === RestResponseStatus.SUCCESS) {
+        let userId = null;
 
-            const session = response.data
-            if(session.selectedProfile != null){
-                const ret = ConfigManager.addMojangAuthAccount(session.selectedProfile.id, session.accessToken, username, session.selectedProfile.name)
-                if(ConfigManager.getClientToken() == null){
-                    ConfigManager.setClientToken(session.clientToken)
-                }
-                ConfigManager.save()
-                return ret
-            } else {
-                return Promise.reject(mojangErrorDisplayable(MojangErrorCode.ERROR_NOT_PAID))
-            }
-
-        } else {
-            return Promise.reject(mojangErrorDisplayable(response.mojangErrorCode))
-        }
+        // Gerar um UUID baseado no hash MD5 do nome de usu�rio
+        const hash = crypto.createHash('md5');
+        hash.update(username);
+        userId = hash.digest('hex');
         
-    } catch (err){
-        log.error(err)
-        return Promise.reject(mojangErrorDisplayable(MojangErrorCode.UNKNOWN))
+        const ret = ConfigManager.addMojangAuthAccount(userId, 'sry', username, username);
+        if (ConfigManager.getClientToken() == null) {
+            ConfigManager.setClientToken('sry');
+        }
+        ConfigManager.save();
+        return ret;
+
+    } catch (err) {
+        return Promise.reject(err);
     }
-}
+};
 
 const AUTH_MODE = { FULL: 0, MS_REFRESH: 1, MC_REFRESH: 2 }
 
@@ -163,21 +158,14 @@ exports.addMicrosoftAccount = async function(authCode) {
  * @param {string} uuid The UUID of the account to be removed.
  * @returns {Promise.<void>} Promise which resolves to void when the action is complete.
  */
-exports.removeMojangAccount = async function(uuid){
+exports.removeMojangAccount = function(uuid) {
     try {
-        const authAcc = ConfigManager.getAuthAccount(uuid)
-        const response = await MojangRestAPI.invalidate(authAcc.accessToken, ConfigManager.getClientToken())
-        if(response.responseStatus === RestResponseStatus.SUCCESS) {
-            ConfigManager.removeAuthAccount(uuid)
-            ConfigManager.save()
-            return Promise.resolve()
-        } else {
-            log.error('Error while removing account', response.error)
-            return Promise.reject(response.error)
-        }
-    } catch (err){
-        log.error('Error while removing account', err)
-        return Promise.reject(err)
+        ConfigManager.removeAuthAccount(uuid);
+        ConfigManager.save();
+        return Promise.resolve();
+    } catch (err) {
+        log.error('Error while removing account', err);
+        return Promise.reject(err);
     }
 }
 

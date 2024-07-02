@@ -273,11 +273,8 @@ body, button {
 */
 
 #welcomeImageSeal {
-    border-radius: 50%;
-    border: 2px solid #cad7e1;
     background: rgba(1, 2, 1, 0.5);
     height: 125px;
-    width: 125px;
     box-shadow: 0px 0px 10px 0px rgb(0, 0, 0);
     margin-bottom: 5%;
     margin-top: 10%;
@@ -486,22 +483,20 @@ body, button {
 
 /* Logo on login form. */
 #loginImageSeal {
-    border-radius: 50%;
-    border: 2px solid #cad7e1;
-    background: rgba(1, 2, 1, 0.5);
-    height: 125px;
-    width: 125px;
-    box-shadow: 0px 0px 10px 0px rgb(0, 0, 0);
-    margin-bottom: 20px;
+    background: rgb(2 2 2 / 0%);
+    width: 263px;
+    box-shadow: 0px 0px 10px 0px rgb(0 0 0 / 0%);
+    margin-bottom: 54px;
 }
 
 /* Header on login view. */
 #loginSubheader {
     font-family: 'Avenir Medium';
-    margin-bottom: 25px;
+    margin-bottom: -2px;
     font-size: 12px;
     letter-spacing: 1px;
     font-weight: bold;
+    margin-left: -135px;
 }
 
 /* Container to organize login field elements. */
@@ -511,6 +506,7 @@ body, button {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    margin-bottom: -15px;
 }
 
 /* SVG icons on the login view. */
@@ -518,22 +514,22 @@ body, button {
     fill: #fff;
     height: 20px;
     width: 20px;
+    margin-right: 193px;
 }
 
 /* Span which displays errors related to login field content. */
 .loginErrorSpan {
     font-family: 'Avenir Medium';
     font-weight: bold;
-    font-size: 8px;
-    color: #ff1b0c;
+    font-size: 12px;
+    color: #ff0000;
     width: 100%;
-    text-align: right;
+    text-align: left;
     position: absolute;
-    top: 7px;
+    top: 36px;
     opacity: 0;
     transition: 0.25s ease;
 }
-
 .shake {
     animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
 }
@@ -559,8 +555,8 @@ body, button {
 /* Login text input styles. */
 .loginField {
     font-family: 'Avenir Book';
-    background: none;
-    border-width: 1.5px 0px 0px 0px;
+    background: #ffffff42;
+    border-width: 1.5px 1.5x 1.5px 1.5px;
     border-style: solid;
     width: 250px;
     margin-bottom: 20px;
@@ -569,9 +565,11 @@ body, button {
     font-weight: bold;
     text-align: center;
     box-sizing: border-box;
-    padding: 7.5px;
-    font-size: 10px;
+    padding: 4.5px;
+    font-size: 14px;
     letter-spacing: 1px;
+    border-radius: 8px;
+    box-shadow: rgb(0 0 0 / 45%) 0px -23px 25px 0px inset, rgb(0 0 0 / 37%) 0px -36px 30px 0px inset, rgb(0 0 0 / 45%) 0px -79px 40px 0px inset, rgba(0, 0, 0, 0.06) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px;
 }
 .loginField:focus {
     outline: none;
@@ -600,27 +598,37 @@ body, button {
     display: flex;
     justify-content: space-between;
     width: 100%;
+    margin-top: 12px;
 }
 
 /* Remember option text. */
 #loginRememberText {
     padding-right: 10px;
     transition: 0.25s ease;
+    margin-left: 12px;
 }
 
 /* Login button styles. */
+
+element.style {
+}
+#loginButton:disabled {
+    color: rgba(255, 255, 255, 0.75);
+    pointer-events: none;
+}
 #loginButton {
     background: none;
     font-weight: bold;
     letter-spacing: 2px;
     border: none;
-    padding: 15px 5px;
-    margin: 10px 0px;
+    padding: 19px 26px;
+    margin: 15px 0px;
     cursor: pointer;
     position: relative;
-    right: -20px;
+    right: -8px;
+    font-size: 18px;
     transition: 0.5s ease;
-}
+    }
 #loginButton:disabled {
     color: rgba(255, 255, 255, 0.75);
     pointer-events: none;
@@ -1238,16 +1246,6 @@ body, button {
     margin: 15px 0px;
 }
 
-/* Add new version - content container */
-.settingsAddVerContainer {
-    background: rgba(0, 0, 0, 0.25);
-    width: 75%;
-    border-radius: 3px;
-    display: flex;
-    justify-content: space-between;
-    margin: 15px 0px;
-}
-
 /* Div which will be populated with the selected server's information. */
 .settingsSelServContent {
     display: flex;
@@ -1290,35 +1288,6 @@ body, button {
 .settingsSelServContainer:hover .settingsSwitchServerButton {
     opacity: 1;
 }
-
-/* Button to add new version . */
-.settingsAddServerButton {
-    opacity: 0;
-    border: 1px solid rgb(255, 255, 255);
-    color: rgb(255, 255, 255);
-    background: none;
-    font-size: 12px;
-    border-radius: 3px;
-    font-family: 'Avenir Medium';
-    transition: 0.25s ease;
-    cursor: pointer;
-    outline: none;
-}
-.settingsAddServerButton:hover,
-.settingsAddServerButton:focus {
-    box-shadow: 0px 0px 20px rgb(255, 255, 255);
-    background: rgba(255, 255, 255, 0.25);
-}
-.settingsAddServerButton:active {
-    box-shadow: 0px 0px 20px rgb(187, 187, 187);
-    background: rgba(187, 187, 187, 0.25);
-    border: 1px solid rgb(187, 187, 187);
-    color: rgb(187, 187, 187);
-}
-.settingsAddVerContainer:hover .settingsAddServerButton {
-    opacity: 1;
-}
-
 
 /* Remove spin button from number inputs. */
 #settingsContainer input[type=number]::-webkit-inner-spin-button {
@@ -2196,7 +2165,6 @@ input:checked + .toggleSwitchSlider:before {
     border-bottom: 1px solid rgba(126, 126, 126, 0.57);
 }
 #settingsAboutLogo {
-    width: 30px;
     height: 30px;
     padding: 5px;
 }
@@ -2491,6 +2459,8 @@ input:checked + .toggleSwitchSlider:before {
     transition: background 2s ease;
     overflow-y: hidden;
 }
+
+
 
 /* Upper content container. */
 #landingContainer > #upper {
@@ -2897,9 +2867,9 @@ input:checked + .toggleSwitchSlider:before {
     height: 70px;
     width: auto;
     position: relative;
-    border: 2px solid white;
+/*    border: 2px solid white; */
     box-sizing: border-box;
-    border-radius: 50%;
+ /*   border-radius: 50%; */
 }
 
 /* Logo container styles. */
@@ -2907,7 +2877,7 @@ input:checked + .toggleSwitchSlider:before {
     position: relative;
     height: 70px;
     width: 70px;
-    border-radius: 50%;
+/*    border-radius: 50%; */
     margin-top: 50px;
 }
 
@@ -3178,10 +3148,17 @@ input:checked + .toggleSwitchSlider:before {
 /* Twitter icon colors. */
 #twitterSVG:hover,
 #twitterURL:focus #twitterSVG {
-    fill: #1da1f2;
+    fill: #000000;
 }
 #twitterSVG:active {
-    fill: #1b8dd4;
+    fill: #000000;
+}
+#linkSVG:hover,
+#linkURL:focus #linkSVG {
+    fill: #000000;
+}
+#linkSVG:active {
+    fill: #000000;
 }
 
 /* Instagram icon colors. */
@@ -3197,10 +3174,19 @@ input:checked + .toggleSwitchSlider:before {
 /* Youtube icon colors. */
 #youtubeSVG:hover,
 #youtubeURL:focus #youtubeSVG {
-    fill: #f00;
+    fill: #ff0000;
+    height: 30;
 }
 #youtubeSVG:active {
-    fill: #ea0202;
+    fill: #ff0000;
+}
+
+#youtubeSVG {
+    height: 13;
+}
+
+#youtubeSVG:hover {
+    height: 28;
 }
 
 /* Discord icon colors. */
@@ -3969,6 +3955,43 @@ input:checked + .toggleSwitchSlider:before {
     justify-content: center;
 }
 
+.container {
+  margin: 100px auto;
+    width: 884px;
+    margin-top: 582px;
+}
+
+.progress {
+  padding: 6px;
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 6px;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.25), 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.progress-bar {	
+  height: 9px;
+	background-color: #ee303c;  
+  border-radius: 0px; 
+  transition: 0.4s linear;  
+  transition-property: width, background-color;    
+}
+
+.progress-striped .progress-bar { 	
+  background-color: #ffffff; 
+  width: 100%; 
+  background-image: linear-gradient(
+        45deg, rgb(255 255 255) 25%, 
+        transparent 25%, transparent 50%, 
+        rgb(255 255 255) 50%, rgb(255 255 255) 75%,
+        transparent 75%, transparent); 
+  animation: progressAnimationStrike 08s;
+}
+
+@keyframes progressAnimationStrike {
+     from { width: 0 }
+     to   { width: 100% }
+}
+
 /* Spinner container. */
 #loadSpinnerContainer {
     position: relative;
@@ -3980,7 +4003,8 @@ input:checked + .toggleSwitchSlider:before {
 /* Stationary image for the spinner. */
 #loadCenterImage {
     position: absolute;
-    width: 277px;
+    margin-bottom: -562px;
+    width: 500px;
     height: auto;
 }
 
