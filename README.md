@@ -5,6 +5,7 @@
 <p align="center"><img src="https://img.shields.io/github/downloads/ManucrackYT/LapsusLauncher/total.svg?style=for-the-badge" alt="downloads">
 <p align="center">Lapsus Launcher is the next end generation Minecraft Launcher with an advanced design to bring all the latest Minecraft versions for you.</p>
 
+
 <p align="center"><img src="https://github.com/ManucrackYT/LapsusLauncher/assets/71397795/2777d0ba-d4ee-476e-a5a6-8f6183a16526"></p>
 
 
