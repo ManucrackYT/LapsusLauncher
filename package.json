@@ -1,6 +1,6 @@
 {
   "name": "lapsuslauncher",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "productName": "Lapsus Launcher",
   "description": "Lapsus Launcher is the next generation launcher for Minecraft, with advanced design",
   "author": "ManucrackYT (https://github.com/ManucrackYT/)",
@@ -44,7 +44,7 @@
     "uuid": "^9.0.1"
   },
   "devDependencies": {
-    "electron": "^26.3.0",
+    "electron": "^32.0.1",
     "electron-builder": "^24.6.4",
     "eslint": "^8.50.0"
   },
