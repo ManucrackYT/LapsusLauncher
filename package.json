@@ -1,10 +1,10 @@
 {
   "name": "lapsuslauncher",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "productName": "Lapsus Launcher",
   "description": "Lapsus Launcher is the next generation launcher for Minecraft, with advanced design",
   "author": "ManucrackYT (https://github.com/ManucrackYT/)",
-  "license": "UNLICENSED",
+  "license": "MIT",
   "homepage": "https://github.com/ManucrackYT/LapsusLauncher",
   "bugs": {
     "url": "https://github.com/ManucrackYT/LapsusLauncher/issues"
@@ -25,6 +25,7 @@
   "dependencies": {
     "@electron/remote": "^2.0.11",
     "adm-zip": "^0.5.9",
+    "discord-rpc": "^4.0.1",
     "discord-rpc-patch": "^4.0.1",
     "ejs": "^3.1.9",
     "ejs-electron": "^2.1.1",
@@ -44,8 +45,9 @@
     "uuid": "^9.0.1"
   },
   "devDependencies": {
+    "7zip-bin": "^5.2.0",
     "electron": "^32.0.1",
-    "electron-builder": "^24.6.4",
+    "electron-builder": "^25.1.8",
     "eslint": "^8.50.0"
   },
   "repository": {
