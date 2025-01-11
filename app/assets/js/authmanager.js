@@ -8,6 +8,9 @@
  * 
  * @module authmanager
  */
+
+// Unfortunately, i have to use the helios auth api for the microsoft auth process because azure has banned me a long time ago
+
 // Requirements
 const ConfigManager          = require('./configmanager')
 const { LoggerUtil }         = require('lapsus-core')

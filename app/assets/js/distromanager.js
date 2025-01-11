@@ -2,6 +2,7 @@ const { DistributionAPI } = require('lapsus-core/common')
 
 const ConfigManager = require('./configmanager')
 
+// Distro URL now static cause i was sick of changing it every time
 
 exports.REMOTE_DISTRO_URL = 'https://lapsusdevs.github.io/LauncherDistro/distribution.json'
 

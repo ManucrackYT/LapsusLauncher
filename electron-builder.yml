@@ -2,7 +2,7 @@ appId: 'lapsuslauncher'
 productName: 'Lapsus Launcher'
 artifactName: '${productName}-setup-${version}.${ext}'
 
-copyright: 'Copyright © 2023-2024 ManucrackYT'
+copyright: 'Copyright © 2023-2025 ManucrackYT'
 
 asar: true
 compression: 'maximum'
