@@ -1,6 +1,6 @@
 {
   "name": "lapsuslauncher",
-  "version": "2.2.4",
+  "version": "2.2.5",
   "productName": "Lapsus Launcher",
   "description": "Lapsus Launcher is the next generation launcher for Minecraft, with advanced design",
   "author": "ManucrackYT (https://github.com/ManucrackYT/)",
@@ -34,7 +34,6 @@
     "fs-extra": "^11.1.1",
     "github-syntax-dark": "^0.5.0",
     "got": "^11.8.5",
-    "ip": "^2.0.1",
     "jquery": "^3.7.1",
     "lapsus-core": "^2.1.6",
     "lapsus-distribution-types": "^1.2.0",
