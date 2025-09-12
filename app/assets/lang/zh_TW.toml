@@ -1,0 +1,280 @@
+[ejs.landing]
+updateAvailableTooltip = "有可用更新"
+usernamePlaceholder = "用戶名"
+usernameEditButton = "編輯"
+settingsTooltip = "設定"
+serverStatus = "伺服器"
+serverStatusPlaceholder = "離線"
+mojangStatus = "Mojang 狀態"
+mojangStatusTooltipTitle = "服務"
+mojangStatusNETitle = "非必要"
+newsButton = "新聞"
+launchButton = "開始遊戲"
+launchButtonPlaceholder = "&#8226; 未選擇伺服器"
+launchDetails = "請稍候.."
+newsNavigationStatus = "{currentPage} / {totalPages}"
+newsErrorLoadSpan = "正在檢查新聞.."
+newsErrorFailedSpan = "載入新聞失敗"
+newsErrorRetryButton = "再試一次"
+newsErrorNoneSpan = "沒有新聞"
+
+[ejs.login]
+loginCancelText = "取消"
+loginSubheader = "離線登入"
+loginEmailError = "* 用戶名至少需要 4 個字元"
+loginEmailPlaceholder = "你的用戶名"
+loginPasswordError = "* 必填"
+loginPasswordPlaceholder = "密碼"
+loginForgotPasswordLink = "https://minecraft.net/password/forgot/"
+loginForgotPasswordText = "忘記密碼？"
+loginRememberMeText = "記住我？"
+loginButtonText = "登入"
+loginNeedAccountLink = "https://minecraft.net/store/minecraft-java-edition/"
+loginNeedAccountText = "需要帳號？"
+loginPasswordDisclaimer1 = "你的密碼會直接傳送到 Mojang，絕不會被儲存。"
+loginPasswordDisclaimer2 = "{appName} 與 Mojang AB 無關。"
+
+[ejs.loginOptions]
+loginOptionsTitle = "登入選項"
+loginWithMicrosoft = "使用 Microsoft 登入"
+loginWithMojang = "離線登入"
+cancelButton = "取消"
+
+[ejs.overlay]
+serverSelectHeader = "可用伺服器"
+serverSelectConfirm = "選擇"
+serverSelectCancel = "取消"
+accountSelectHeader = "選擇帳號"
+accountSelectConfirm = "選擇"
+accountSelectCancel = "取消"
+
+[ejs.settings]
+navHeaderText = "設定"
+navAccount = "帳號"
+navMinecraft = "Minecraft"
+navMods = "模組"
+navJava = "Java"
+navLauncher = "啟動器"
+navAbout = "關於"
+navUpdates = "更新"
+navDone = "完成"
+tabAccountHeaderText = "帳號設定"
+tabAccountHeaderDesc = "新增或管理帳號。"
+microsoftAccount = "Microsoft"
+addMicrosoftAccount = "+ 新增 Microsoft 帳號"
+mojangAccount = "離線"
+addMojangAccount = "+ 新增離線帳號"
+minecraftTabHeaderText = "Minecraft 設定"
+minecraftTabHeaderDesc = "與遊戲啟動相關的選項。"
+gameResolutionTitle = "遊戲解析度"
+launchFullscreenTitle = "以全螢幕啟動。"
+autoConnectTitle = "啟動時自動連線至伺服器。"
+launchDetachedTitle = "將遊戲進程與啟動器分離。"
+launchDetachedDesc = "如果遊戲未分離，關閉啟動器將同時關閉遊戲。"
+tabModsHeaderText = "模組設定"
+tabModsHeaderDesc = "啟用或停用模組。"
+switchServerButton = "切換"
+requiredMods = "必要模組"
+optionalMods = "可選模組"
+dropinMods = "拖放模組"
+addMods = "新增模組"
+dropinRefreshNote = "(按 F5 重新整理)"
+shaderpacks = "光影包"
+shaderpackDesc = "啟用或停用光影。注意，光影僅能在高效能設備上流暢運行。你可在此新增自訂光影包。"
+selectShaderpack = "選擇光影包"
+tabJavaHeaderText = "Java 設定"
+tabJavaHeaderDesc = "管理 Java 設定（進階）。"
+memoryTitle = "記憶體"
+maxRAM = "最大 RAM"
+minRAM = "最小 RAM"
+memoryDesc = "建議的最小 RAM 為 3 GB。將最小值與最大值設為相同可能減少延遲。"
+memoryTotalTitle = "總計"
+memoryAvailableTitle = "可用"
+javaExecutableTitle = "Java 執行檔"
+javaExecSelDialogTitle = "選擇 Java 執行檔"
+javaExecSelButtonText = "選擇檔案"
+javaExecDesc = "Java 執行檔會在遊戲啟動前驗證。"
+javaPathDesc = "路徑應以 <strong>{pathSuffix}</strong> 結尾。"
+jvmOptsTitle = "額外 JVM 參數"
+jvmOptsDesc = "提供給 JVM 的執行參數。<em>-Xms</em> 和 <em>-Xmx</em> 不應包含。"
+launcherTabHeaderText = "啟動器設定"
+launcherTabHeaderDesc = "與啟動器本身相關的選項。"
+allowPrereleaseTitle = "允許預發佈更新。"
+allowPrereleaseDesc = "預發佈版本包含可能尚未完全測試或整合的新功能。<br>如果你使用的是預發佈版本，此選項將始終啟用。"
+dataDirectoryTitle = "資料目錄"
+selectDataDirectory = "選擇資料目錄"
+chooseFolder = "選擇資料夾"
+dataDirectoryDesc = "所有遊戲檔案與本機 Java 安裝將存放於資料目錄中。<br>截圖與世界存檔會存於對應伺服器設定的實例資料夾內。"
+aboutTabHeaderText = "關於"
+aboutTabHeaderDesc = "檢視目前版本的資訊與更新日誌。"
+aboutTitle = "{appName}"
+stableRelease = "穩定版"
+versionText = "版本 "
+sourceGithub = "原始碼 (GitHub)"
+support = "支援"
+devToolsConsole = "開發者工具主控台"
+releaseNotes = "更新日誌"
+changelog = "變更記錄"
+noReleaseNotes = "無更新日誌"
+viewReleaseNotes = "在 GitHub 檢視更新日誌"
+launcherUpdatesHeaderText = "啟動器更新"
+launcherUpdatesHeaderDesc = "下載、安裝與檢視啟動器的更新。"
+checkForUpdates = "檢查更新"
+whatsNew = "新功能"
+updateReleaseNotes = "更新日誌"
+
+[ejs.waiting]
+waitingText = "正在等待 Microsoft.."
+
+[ejs.welcome]
+continueButton = "繼續"
+
+[js.login]
+login = "登入"
+loggingIn = "正在登入"
+success = "成功"
+tryAgain = "再試一次"
+
+[js.login.error]
+invalidValue = "* 用戶名至少需要 4 個字元"
+requiredValue = "* 必填"
+
+[js.login.error.unknown]
+title = "登入時發生未知錯誤"
+desc = "發生未知錯誤。請查看主控台以取得詳細資訊。"
+
+[js.landing.launch]
+pleaseWait = "請稍候.."
+failureTitle = "啟動時發生錯誤"
+failureText = "請查看主控台 (CTRL + Shift + i) 以取得詳細資訊。"
+okay = "確定"
+
+[js.landing.selectedAccount]
+noAccountSelected = "未選擇帳號"
+
+[js.landing.selectedServer]
+noSelection = "未選擇伺服器"
+loading = "載入中.."
+
+[js.landing.serverStatus]
+server = "伺服器"
+offline = "離線"
+players = "玩家"
+
+[js.landing.systemScan]
+checking = "正在檢查系統資訊.."
+noCompatibleJava = "未找到相容的<br>Java 安裝"
+installJavaMessage = "要啟動 Minecraft，需要安裝 64 位元的 Java {major}。要安裝嗎？"
+installJava = "安裝 Java"
+installJavaManually = "手動安裝"
+javaDownloadPrepare = "準備下載 Java.."
+javaDownloadFailureTitle = "下載 Java 時發生錯誤"
+javaDownloadFailureText = "請查看主控台 (CTRL + Shift + i) 以取得詳細資訊。"
+javaRequired = "啟動需要 Java<br>"
+javaRequiredMessage = "需要有效的 x64 Java {major} 安裝才能啟動。<br>"
+javaRequiredDismiss = "我明白了"
+javaRequiredCancel = "返回"
+
+[js.landing.downloadJava]
+findJdkFailure = "無法找到 OpenJDK 發行版。"
+javaDownloadCorruptedError = "下載的 JDK 驗證失敗，檔案可能已損壞。"
+extractingJava = "正在解壓縮 Java"
+javaInstalled = "Java 已安裝！"
+
+[js.landing.dlAsync]
+loadingServerInfo = "正在載入伺服器資訊.."
+fatalError = "嚴重錯誤"
+unableToLoadDistributionIndex = "無法載入發行索引副本。請查看主控台 (CTRL + Shift + i) 以取得詳細資訊。"
+pleaseWait = "請稍候.."
+errorDuringLaunchTitle = "啟動時發生錯誤"
+seeConsoleForDetails = "請查看主控台 (CTRL + Shift + i) 以取得詳細資訊。"
+validatingFileIntegrity = "正在驗證檔案完整性.."
+errorDuringFileVerificationTitle = "檔案驗證時發生錯誤"
+downloadingFiles = "正在下載檔案.."
+errorDuringFileDownloadTitle = "檔案下載時發生錯誤"
+preparingToLaunch = "準備啟動.."
+launchingGame = "正在啟動遊戲.."
+launchWrapperNotDownloaded = "主要檔案 LaunchWrapper 下載失敗，因此遊戲無法啟動。<br><br>要解決此問題，請暫時關閉防毒軟體，然後再次啟動遊戲。<br><br>如果有時間，請 <a href=\"https://github.com/ManucrackYT/LapsusLauncher/issues\">提交問題</a> 並告訴我們你使用的防毒軟體。我們會與他們聯繫並嘗試解決。"
+doneEnjoyGame = "完成，祝你遊戲愉快！"
+checkConsoleForDetails = "請查看主控台 (CTRL + Shift + i) 以取得詳細資訊。"
+
+[js.landing.news]
+checking = "正在檢查新聞"
+
+[js.settings.fileSelectors]
+executables = "可執行檔"
+allFiles = "所有檔案"
+
+[js.settings.mstfLogin]
+errorTitle = "發生錯誤"
+errorMessage = "Microsoft 驗證失敗。請再試一次。"
+okButton = "確定"
+
+[js.settings.mstfLogout]
+errorTitle = "發生錯誤"
+errorMessage = "Microsoft 登出失敗。請再試一次。"
+okButton = "確定"
+
+[js.settings.authAccountSelect]
+selectButton = "選擇帳號"
+selectedButton = "已選帳號 &#10004;"
+
+[js.settings.authAccountLogout]
+lastAccountWarningTitle = "警告<br>這是你的最後一個帳號"
+lastAccountWarningMessage = "要使用啟動器，必須至少登入一個帳號。登出後你需要重新登入。<br><br>確定要登出嗎？"
+confirmButton = "我確定"
+cancelButton = "取消"
+
+[js.settings.authAccountPopulate]
+username = "用戶名"
+uuid = "UUID"
+selectAccount = "選擇帳號"
+selectedAccount = "已選帳號 ✓"
+logout = "登出"
+
+[js.settings.dropinMods]
+removeButton = "移除"
+deleteFailedTitle = "刪除失敗<br>拖放模組 {fullName}"
+deleteFailedMessage = "請確保檔案未被使用，然後再試一次。"
+failedToggleTitle = "切換失敗<br>一個或多個拖放模組"
+okButton = "確定"
+
+[js.settings.serverListing]
+mainServer = "主要伺服器"
+
+[js.settings.java]
+selectedJava = "已選: Java {version} ({vendor})"
+invalidSelection = "選擇無效"
+requiresJava = "需要 Java {major} x64。"
+availableOptions = "Java {major} 可用選項 (HotSpot VM)"
+
+[js.settings.about]
+preReleaseTitle = "預發佈"
+stableReleaseTitle = "穩定版"
+releaseNotesFailed = "載入更新日誌失敗。"
+
+[js.settings.updates]
+newReleaseTitle = "有新版本可用"
+newPreReleaseTitle = "有新預發佈可用"
+downloadingButton = "正在下載.."
+downloadButton = '從 GitHub 下載<span style="font-size: 10px;color: gray;text-shadow: none !important;">關閉啟動器並執行 dmg 更新。</span>'
+latestVersionTitle = "你正在使用最新版本"
+checkForUpdatesButton = "檢查更新"
+checkingForUpdatesButton = "正在檢查更新.."
+
+[js.uibinder.startup]
+fatalErrorTitle = "嚴重錯誤: 無法載入發行索引"
+fatalErrorMessage = "無法連線至伺服器以下載發行索引，且沒有可用的本機副本。<br><br>發行索引是提供最新伺服器資訊的重要檔案。沒有它啟動器無法啟動。請確認你已連線至網際網路並重新啟動應用程式。"
+closeButton = "關閉"
+
+[js.uibinder.validateAccount]
+failedMessageTitle = "重新整理登入失敗"
+failedMessage = "我們無法重新整理 <strong>{account}</strong> 的登入。請選擇其他帳號或重新登入。"
+failedMessageSelectAnotherAccount = "我們無法重新整理 <strong>{account}</strong> 的登入。請重新登入。"
+loginButton = "登入"
+selectAnotherAccountButton = "選擇其他帳號"
+
+[js.uicore.autoUpdate]
+checkingForUpdateButton = "正在檢查更新..."
+installNowButton = "立即安裝"
+checkForUpdatesButton = "檢查更新"

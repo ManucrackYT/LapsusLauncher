@@ -581,7 +581,7 @@ async function dlAsync(login = true) {
             if(SERVER_JOINED_REGEX.test(data)){
                 DiscordWrapper.updateDetails('Exploring the Realm!')
             } else if(GAME_JOINED_REGEX.test(data)){
-                DiscordWrapper.updateDetails('Sailing to Westeros!')
+                DiscordWrapper.updateDetails('Sailing to LapsusLauncher!')
             }
         }
 
@@ -601,7 +601,7 @@ async function dlAsync(login = true) {
             proc.stdout.on('data', tempListener)
             proc.stderr.on('data', gameErrorListener)
 
-            setLaunchDetails(Lang.queryJS('landing.dlAsync.doneEnjoyServer'))
+            setLaunchDetails(Lang.queryJS('landing.dlAsync.doneEnjoyGame'))
 
             // Init Discord Hook
             if(distro.rawDistribution.discord != null && serv.rawServerdiscord != null){

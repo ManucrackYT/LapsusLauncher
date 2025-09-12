@@ -105,6 +105,18 @@ ipcMain.handle(SHELL_OPCODE.TRASH_ITEM, async (event, ...args) => {
     }
 });
 
+// IPC handler to list language files
+ipcMain.handle('list-language-files', async () => {
+    try {
+        const langDir = path.join(__dirname, 'app', 'assets', 'lang');
+        const files = await fs.readdir(langDir);
+        return files.filter(file => file.endsWith('.toml') && file !== '_custom.toml');
+    } catch (error) {
+        console.error('Error reading language files:', error);
+        return [];
+    }
+});
+
 // Step 3: Example Addition (Custom Feature)
 ipcMain.on('step3Action', (event, arg) => {
     if (arg === 'doSomething') {

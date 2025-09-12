@@ -4,7 +4,15 @@
             <h2><%- lang('loginOptions.loginOptionsTitle') %></h2>
             <div class="loginOptionActions">
                 <div class="loginOptionButtonContainer">
-                    <button id="loginOptionMicrosoft" class="loginOptionButton">
+                    <button id="loginOptionMicrosoft" class="loginOptionButton" style="
+                        background: rgba(255, 255, 255, 0.2);
+                        backdrop-filter: blur(10px);
+                        -webkit-backdrop-filter: blur(10px);
+                        border-radius: 12px;
+                        border: 1px solid rgba(255, 255, 255, 0.18);
+                        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+                        transition: all 0.3s ease;
+                    ">
                         <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 23 23">
                             <path fill="#f35325" d="M1 1h10v10H1z" />
                             <path fill="#81bc06" d="M12 1h10v10H12z" />
@@ -15,13 +23,29 @@
                     </button>
                 </div>
                 <div class="loginOptionButtonContainer">
-                    <button id="loginOptionMojang" class="loginOptionButton">
+                    <button id="loginOptionMojang" class="loginOptionButton" style="
+                        background: rgba(255, 255, 255, 0.2);
+                        backdrop-filter: blur(10px);
+                        -webkit-backdrop-filter: blur(10px);
+                        border-radius: 12px;
+                        border: 1px solid rgba(255, 255, 255, 0.18);
+                        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+                        transition: all 0.3s ease;
+                    ">
                         <span><%- lang('loginOptions.loginWithMojang') %></span>
                     </button>
                 </div>
             </div>
             <div id="loginOptionCancelContainer" style="display: none;">
-                <button id="loginOptionCancelButton"><%- lang('loginOptions.cancelButton') %></button>
+                <button id="loginOptionCancelButton" style="
+                    background: rgba(255, 255, 255, 0.2);
+                    backdrop-filter: blur(10px);
+                    -webkit-backdrop-filter: blur(10px);
+                    border-radius: 12px;
+                    border: 1px solid rgba(255, 255, 255, 0.18);
+                    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+                    transition: all 0.3s ease;
+                "><%- lang('loginOptions.cancelButton') %></button>
             </div>
         </div>
     </div>

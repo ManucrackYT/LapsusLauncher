@@ -1,0 +1,281 @@
+[ejs.landing]
+updateAvailableTooltip = "有可用更新"
+usernamePlaceholder = "用户名"
+usernameEditButton = "编辑"
+settingsTooltip = "设置"
+serverStatus = "服务器"
+serverStatusPlaceholder = "离线"
+mojangStatus = "Mojang 状态"
+mojangStatusTooltipTitle = "服务"
+mojangStatusNETitle = "非必要"
+newsButton = "新闻"
+launchButton = "开始游戏"
+launchButtonPlaceholder = "&#8226; 未选择服务器"
+launchDetails = "请稍候.."
+newsNavigationStatus = "{currentPage} / {totalPages}"
+newsErrorLoadSpan = "正在检查新闻.."
+newsErrorFailedSpan = "加载新闻失败"
+newsErrorRetryButton = "重试"
+newsErrorNoneSpan = "暂无新闻"
+
+[ejs.login]
+loginCancelText = "取消"
+loginSubheader = "离线登录"
+loginEmailError = "* 用户名至少需要 4 个字符"
+loginEmailPlaceholder = "您的用户名"
+loginPasswordError = "* 必填"
+loginPasswordPlaceholder = "密码"
+loginForgotPasswordLink = "https://minecraft.net/password/forgot/"
+loginForgotPasswordText = "忘记密码？"
+loginRememberMeText = "记住我？"
+loginButtonText = "登录"
+loginNeedAccountLink = "https://minecraft.net/store/minecraft-java-edition/"
+loginNeedAccountText = "需要账户？"
+loginPasswordDisclaimer1 = "您的密码会直接发送至 Mojang，不会被存储。"
+loginPasswordDisclaimer2 = "{appName} 与 Mojang AB 无关。"
+
+[ejs.loginOptions]
+loginOptionsTitle = "登录选项"
+loginWithMicrosoft = "使用 Microsoft 登录"
+loginWithMojang = "离线登录"
+cancelButton = "取消"
+
+[ejs.overlay]
+serverSelectHeader = "可用服务器"
+serverSelectConfirm = "选择"
+serverSelectCancel = "取消"
+accountSelectHeader = "选择账户"
+accountSelectConfirm = "选择"
+accountSelectCancel = "取消"
+
+[ejs.settings]
+navHeaderText = "设置"
+navAccount = "账户"
+navMinecraft = "Minecraft"
+navMods = "模组"
+navJava = "Java"
+navLauncher = "启动器"
+navAbout = "关于"
+navUpdates = "更新"
+navDone = "完成"
+tabAccountHeaderText = "账户设置"
+tabAccountHeaderDesc = "添加新账户或管理现有账户。"
+microsoftAccount = "Microsoft"
+addMicrosoftAccount = "+ 添加 Microsoft 账户"
+mojangAccount = "离线"
+addMojangAccount = "+ 添加离线账户"
+minecraftTabHeaderText = "Minecraft 设置"
+minecraftTabHeaderDesc = "与游戏启动相关的选项。"
+gameResolutionTitle = "游戏分辨率"
+launchFullscreenTitle = "以全屏方式启动。"
+autoConnectTitle = "启动时自动连接服务器。"
+launchDetachedTitle = "游戏进程与启动器分离运行。"
+launchDetachedDesc = "如果未分离，关闭启动器也会关闭游戏。"
+tabModsHeaderText = "模组设置"
+tabModsHeaderDesc = "启用或禁用模组。"
+switchServerButton = "切换"
+requiredMods = "必需模组"
+optionalMods = "可选模组"
+dropinMods = "拖入模组"
+addMods = "添加模组"
+dropinRefreshNote = "(按 F5 刷新)"
+shaderpacks = "光影包"
+shaderpackDesc = "启用或禁用光影。注意，光影需要较强的配置才能流畅运行。您可以在此添加自定义包。"
+selectShaderpack = "选择光影包"
+tabJavaHeaderText = "Java 设置"
+tabJavaHeaderDesc = "管理 Java 配置（高级）。"
+memoryTitle = "内存"
+maxRAM = "最大内存"
+minRAM = "最小内存"
+memoryDesc = "推荐的最小内存为 3GB。将最小值和最大值设置为相同可能减少卡顿。"
+memoryTotalTitle = "总计"
+memoryAvailableTitle = "可用"
+javaExecutableTitle = "Java 可执行文件"
+javaExecSelDialogTitle = "选择 Java 可执行文件"
+javaExecSelButtonText = "选择文件"
+javaExecDesc = "Java 可执行文件会在启动前进行验证。"
+javaPathDesc = "路径应以 <strong>{pathSuffix}</strong> 结尾。"
+jvmOptsTitle = "额外 JVM 参数"
+jvmOptsDesc = "运行时传递给 JVM 的选项。不要包含 <em>-Xms</em> 和 <em>-Xmx</em>。"
+launcherTabHeaderText = "启动器设置"
+launcherTabHeaderDesc = "与启动器本身相关的选项。"
+allowPrereleaseTitle = "允许预发布更新。"
+allowPrereleaseDesc = "预发布版本可能包含尚未完全测试或集成的新功能。<br>如果您正在使用预发布版本，此选项始终为真。"
+dataDirectoryTitle = "数据目录"
+selectDataDirectory = "选择数据目录"
+chooseFolder = "选择文件夹"
+dataDirectoryDesc = "所有游戏文件和本地 Java 安装将存储在数据目录中。<br>截图和存档存储在对应服务器配置的实例文件夹中。"
+aboutTabHeaderText = "关于"
+aboutTabHeaderDesc = "查看当前版本的信息和发布说明。"
+aboutTitle = "{appName}"
+stableRelease = "稳定版本"
+versionText = "版本 "
+sourceGithub = "源代码 (GitHub)"
+support = "支持"
+devToolsConsole = "开发者工具控制台"
+releaseNotes = "发布说明"
+changelog = "更新日志"
+noReleaseNotes = "无发布说明"
+viewReleaseNotes = "在 GitHub 查看发布说明"
+launcherUpdatesHeaderText = "启动器更新"
+launcherUpdatesHeaderDesc = "下载、安装和查看启动器更新。"
+checkForUpdates = "检查更新"
+whatsNew = "新内容"
+updateReleaseNotes = "更新说明"
+
+[ejs.waiting]
+waitingText = "等待 Microsoft.."
+
+[ejs.welcome]
+continueButton = "继续"
+
+
+[js.login]
+login = "登录"
+loggingIn = "正在登录"
+success = "成功"
+tryAgain = "重试"
+
+[js.login.error]
+invalidValue = "* 用户名至少需要 4 个字符"
+requiredValue = "* 必填"
+
+[js.login.error.unknown]
+title = "登录时发生未知错误"
+desc = "发生未知错误。详情请查看控制台。"
+
+[js.landing.launch]
+pleaseWait = "请稍候.."
+failureTitle = "启动时出错"
+failureText = "详情请查看控制台 (CTRL + Shift + i)。"
+okay = "好的"
+
+[js.landing.selectedAccount]
+noAccountSelected = "未选择账户"
+
+[js.landing.selectedServer]
+noSelection = "未选择服务器"
+loading = "正在加载.."
+
+[js.landing.serverStatus]
+server = "服务器"
+offline = "离线"
+players = "玩家"
+
+[js.landing.systemScan]
+checking = "正在检查系统信息.."
+noCompatibleJava = "未找到兼容的<br>Java 安装"
+installJavaMessage = "要启动 Minecraft，需要安装 64 位 Java {major}。是否需要我们帮您安装？"
+installJava = "安装 Java"
+installJavaManually = "手动安装"
+javaDownloadPrepare = "正在准备下载 Java.."
+javaDownloadFailureTitle = "下载 Java 时出错"
+javaDownloadFailureText = "详情请查看控制台 (CTRL + Shift + i)。"
+javaRequired = "需要 Java<br>才能启动"
+javaRequiredMessage = "启动需要有效的 Java {major} x64 安装。<br>"
+javaRequiredDismiss = "我明白了"
+javaRequiredCancel = "返回"
+
+[js.landing.downloadJava]
+findJdkFailure = "未能找到 OpenJDK 发行版。"
+javaDownloadCorruptedError = "下载的 JDK 哈希错误，文件可能已损坏。"
+extractingJava = "正在解压 Java"
+javaInstalled = "Java 已安装！"
+
+[js.landing.dlAsync]
+loadingServerInfo = "正在加载服务器信息.."
+fatalError = "致命错误"
+unableToLoadDistributionIndex = "无法加载发行索引副本。详情请查看控制台 (CTRL + Shift + i)。"
+pleaseWait = "请稍候.."
+errorDuringLaunchTitle = "启动时出错"
+seeConsoleForDetails = "详情请查看控制台 (CTRL + Shift + i)。"
+validatingFileIntegrity = "正在验证文件完整性.."
+errorDuringFileVerificationTitle = "文件验证时出错"
+downloadingFiles = "正在下载文件.."
+errorDuringFileDownloadTitle = "下载文件时出错"
+preparingToLaunch = "正在准备启动.."
+launchingGame = "正在启动游戏.."
+launchWrapperNotDownloaded = "主文件 LaunchWrapper 下载失败，因此无法启动游戏。<br><br>解决方法：临时关闭杀毒软件并重新启动游戏。<br><br>如果有时间，请 <a href=\"https://github.com/ManucrackYT/LapsusLauncher/issues\">提交问题</a> 告诉我们您使用的杀毒软件，我们会联系他们尝试解决。"
+doneEnjoyGame = "完成，祝您游戏愉快！"
+checkConsoleForDetails = "详情请查看控制台 (CTRL + Shift + i)。"
+
+[js.landing.news]
+checking = "正在检查新闻"
+
+[js.settings.fileSelectors]
+executables = "可执行文件"
+allFiles = "所有文件"
+
+[js.settings.mstfLogin]
+errorTitle = "发生错误"
+errorMessage = "Microsoft 身份验证失败，请重试。"
+okButton = "确定"
+
+[js.settings.mstfLogout]
+errorTitle = "发生错误"
+errorMessage = "Microsoft 注销失败，请重试。"
+okButton = "确定"
+
+[js.settings.authAccountSelect]
+selectButton = "选择账户"
+selectedButton = "已选择账户 &#10004;"
+
+[js.settings.authAccountLogout]
+lastAccountWarningTitle = "警告<br>这是您的最后一个账户"
+lastAccountWarningMessage = "使用启动器必须至少登录一个账户。注销后需要重新登录。<br><br>您确定要退出吗？"
+confirmButton = "我确定"
+cancelButton = "取消"
+
+[js.settings.authAccountPopulate]
+username = "用户名"
+uuid = "UUID"
+selectAccount = "选择账户"
+selectedAccount = "已选择账户 ✓"
+logout = "退出登录"
+
+[js.settings.dropinMods]
+removeButton = "移除"
+deleteFailedTitle = "删除失败<br>拖入模组 {fullName}"
+deleteFailedMessage = "请确保文件未被占用并重试。"
+failedToggleTitle = "切换失败<br>一个或多个拖入模组"
+okButton = "好的"
+
+[js.settings.serverListing]
+mainServer = "主服务器"
+
+[js.settings.java]
+selectedJava = "已选择: Java {version} ({vendor})"
+invalidSelection = "选择无效"
+requiresJava = "需要 Java {major} x64。"
+availableOptions = "Java {major} (HotSpot VM) 可用选项"
+
+[js.settings.about]
+preReleaseTitle = "预发布版本"
+stableReleaseTitle = "稳定版本"
+releaseNotesFailed = "加载发布说明失败。"
+
+[js.settings.updates]
+newReleaseTitle = "有新版本可用"
+newPreReleaseTitle = "有新预发布版本可用"
+downloadingButton = "正在下载.."
+downloadButton = '从 GitHub 下载<span style="font-size: 10px;color: gray;text-shadow: none !important;">关闭启动器并运行 dmg 文件以更新。</span>'
+latestVersionTitle = "您已运行最新版本"
+checkForUpdatesButton = "检查更新"
+checkingForUpdatesButton = "正在检查更新.."
+
+[js.uibinder.startup]
+fatalErrorTitle = "致命错误：无法加载发行索引"
+fatalErrorMessage = "无法连接到服务器以下载发行索引，本地副本也不可用。<br><br>发行索引是提供最新服务器信息的关键文件，没有它启动器无法运行。请确认您已连接互联网并重新启动应用程序。"
+closeButton = "关闭"
+
+[js.uibinder.validateAccount]
+failedMessageTitle = "刷新登录失败"
+failedMessage = "我们无法刷新 <strong>{account}</strong> 的登录。请选择其他账户或重新登录。"
+failedMessageSelectAnotherAccount = "我们无法刷新 <strong>{account}</strong> 的登录，请重新登录。"
+loginButton = "登录"
+selectAnotherAccountButton = "选择其他账户"
+
+[js.uicore.autoUpdate]
+checkingForUpdateButton = "正在检查更新..."
+installNowButton = "立即安装"
+checkForUpdatesButton = "检查更新"

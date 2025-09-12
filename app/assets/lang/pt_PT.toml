@@ -1,0 +1,281 @@
+[ejs.landing]
+updateAvailableTooltip = "Atualização Disponível"
+usernamePlaceholder = "Nome de Utilizador"
+usernameEditButton = "Editar"
+settingsTooltip = "Definições"
+serverStatus = "SERVIDOR"
+serverStatusPlaceholder = "OFFLINE"
+mojangStatus = "ESTADO MOJANG"
+mojangStatusTooltipTitle = "Serviços"
+mojangStatusNETitle = "Não&nbsp;Essencial"
+newsButton = "NOTÍCIAS"
+launchButton = "JOGAR"
+launchButtonPlaceholder = "&#8226; Nenhum Servidor Selecionado"
+launchDetails = "Por favor, aguarde.."
+newsNavigationStatus = "{currentPage} de {totalPages}"
+newsErrorLoadSpan = "A verificar notícias.."
+newsErrorFailedSpan = "Falha ao carregar notícias"
+newsErrorRetryButton = "Tentar Novamente"
+newsErrorNoneSpan = "Sem notícias"
+
+[ejs.login]
+loginCancelText = "Cancelar"
+loginSubheader = "LOGIN OFFLINE"
+loginEmailError = "* O nome de utilizador deve ter pelo menos 4 caracteres"
+loginEmailPlaceholder = "O Seu Nome de Utilizador"
+loginPasswordError = "* Obrigatório"
+loginPasswordPlaceholder = "PALAVRA-PASSE"
+loginForgotPasswordLink = "https://minecraft.net/password/forgot/"
+loginForgotPasswordText = "esqueceu a palavra-passe?"
+loginRememberMeText = "lembrar-me?"
+loginButtonText = "INICIAR SESSÃO"
+loginNeedAccountLink = "https://minecraft.net/store/minecraft-java-edition/"
+loginNeedAccountText = "Precisa de uma conta?"
+loginPasswordDisclaimer1 = "A sua palavra-passe é enviada diretamente para a Mojang e nunca é armazenada."
+loginPasswordDisclaimer2 = "{appName} não está afiliado à Mojang AB."
+
+[ejs.loginOptions]
+loginOptionsTitle = "Opções de Login"
+loginWithMicrosoft = "Iniciar sessão com Microsoft"
+loginWithMojang = "Login Offline"
+cancelButton = "Cancelar"
+
+[ejs.overlay]
+serverSelectHeader = "Servidores Disponíveis"
+serverSelectConfirm = "Selecionar"
+serverSelectCancel = "Cancelar"
+accountSelectHeader = "Selecionar uma Conta"
+accountSelectConfirm = "Selecionar"
+accountSelectCancel = "Cancelar"
+
+[ejs.settings]
+navHeaderText = "Definições"
+navAccount = "Conta"
+navMinecraft = "Minecraft"
+navMods = "Mods"
+navJava = "Java"
+navLauncher = "Launcher"
+navAbout = "Sobre"
+navUpdates = "Atualizações"
+navDone = "Concluído"
+tabAccountHeaderText = "Definições da Conta"
+tabAccountHeaderDesc = "Adicionar novas contas ou gerir as existentes."
+microsoftAccount = "Microsoft"
+addMicrosoftAccount = "+ Adicionar Conta Microsoft"
+mojangAccount = "Offline"
+addMojangAccount = "+ Adicionar Conta Offline"
+minecraftTabHeaderText = "Definições do Minecraft"
+minecraftTabHeaderDesc = "Opções relacionadas com o lançamento do jogo."
+gameResolutionTitle = "Resolução do Jogo"
+launchFullscreenTitle = "Iniciar em ecrã inteiro."
+autoConnectTitle = "Ligar automaticamente ao servidor no início."
+launchDetachedTitle = "Iniciar processo do jogo separado do launcher."
+launchDetachedDesc = "Se o jogo não estiver separado, ao fechar o launcher o jogo também será fechado."
+tabModsHeaderText = "Definições de Mods"
+tabModsHeaderDesc = "Ativar ou desativar mods."
+switchServerButton = "Mudar"
+requiredMods = "Mods Necessários"
+optionalMods = "Mods Opcionais"
+dropinMods = "Mods Drop-in"
+addMods = "Adicionar Mods"
+dropinRefreshNote = "(F5 para Atualizar)"
+shaderpacks = "Pacotes de Shaders"
+shaderpackDesc = "Ativar ou desativar shaders. Atenção: os shaders só funcionam bem em computadores potentes. Pode adicionar pacotes personalizados aqui."
+selectShaderpack = "Selecionar Shaderpack"
+tabJavaHeaderText = "Definições do Java"
+tabJavaHeaderDesc = "Gerir a configuração do Java (avançado)."
+memoryTitle = "Memória"
+maxRAM = "RAM Máxima"
+minRAM = "RAM Mínima"
+memoryDesc = "O mínimo recomendado é 3 GB de RAM. Definir valores iguais para mínimo e máximo pode reduzir o lag."
+memoryTotalTitle = "Total"
+memoryAvailableTitle = "Disponível"
+javaExecutableTitle = "Executável Java"
+javaExecSelDialogTitle = "Selecionar Executável Java"
+javaExecSelButtonText = "Escolher Ficheiro"
+javaExecDesc = "O executável Java é validado antes de iniciar o jogo."
+javaPathDesc = "O caminho deve terminar com <strong>{pathSuffix}</strong>."
+jvmOptsTitle = "Opções JVM Adicionais"
+jvmOptsDesc = "Opções fornecidas ao JVM em tempo de execução. <em>-Xms</em> e <em>-Xmx</em> não devem ser incluídas."
+launcherTabHeaderText = "Definições do Launcher"
+launcherTabHeaderDesc = "Opções relacionadas com o próprio launcher."
+allowPrereleaseTitle = "Permitir Atualizações Pré-Lançamento."
+allowPrereleaseDesc = "As Pré-Lançamentos incluem funcionalidades novas que podem não estar totalmente testadas ou integradas.<br>Isto será sempre verdade se estiver a usar uma versão pré-lançamento."
+dataDirectoryTitle = "Diretório de Dados"
+selectDataDirectory = "Selecionar Diretório de Dados"
+chooseFolder = "Escolher Pasta"
+dataDirectoryDesc = "Todos os ficheiros do jogo e instalações locais do Java serão guardados no diretório de dados.<br>As capturas de ecrã e mundos são guardados na pasta da instância para a configuração de servidor correspondente."
+aboutTabHeaderText = "Sobre"
+aboutTabHeaderDesc = "Ver informações e notas da versão atual."
+aboutTitle = "{appName}"
+stableRelease = "Versão Estável"
+versionText = "Versão "
+sourceGithub = "Fonte (GitHub)"
+support = "Suporte"
+devToolsConsole = "Consola DevTools"
+releaseNotes = "Notas de Versão"
+changelog = "Registo de Alterações"
+noReleaseNotes = "Sem Notas de Versão"
+viewReleaseNotes = "Ver Notas de Versão no GitHub"
+launcherUpdatesHeaderText = "Atualizações do Launcher"
+launcherUpdatesHeaderDesc = "Descarregar, instalar e rever atualizações do launcher."
+checkForUpdates = "Procurar Atualizações"
+whatsNew = "Novidades"
+updateReleaseNotes = "Notas de Atualização"
+
+[ejs.waiting]
+waitingText = "A aguardar pela Microsoft.."
+
+[ejs.welcome]
+continueButton = "CONTINUAR"
+
+
+[js.login]
+login = "INICIAR SESSÃO"
+loggingIn = "A INICIAR SESSÃO"
+success = "SUCESSO"
+tryAgain = "Tentar Novamente"
+
+[js.login.error]
+invalidValue = "* O nome de utilizador deve ter pelo menos 4 caracteres"
+requiredValue = "* Obrigatório"
+
+[js.login.error.unknown]
+title = "Erro Desconhecido Durante Login"
+desc = "Ocorreu um erro desconhecido. Veja a consola para mais detalhes."
+
+[js.landing.launch]
+pleaseWait = "Por favor, aguarde.."
+failureTitle = "Erro Durante o Lançamento"
+failureText = "Veja a consola (CTRL + Shift + i) para mais detalhes."
+okay = "Ok"
+
+[js.landing.selectedAccount]
+noAccountSelected = "Nenhuma Conta Selecionada"
+
+[js.landing.selectedServer]
+noSelection = "Nenhum Servidor Selecionado"
+loading = "A carregar.."
+
+[js.landing.serverStatus]
+server = "SERVIDOR"
+offline = "OFFLINE"
+players = "JOGADORES"
+
+[js.landing.systemScan]
+checking = "A verificar informações do sistema.."
+noCompatibleJava = "Nenhuma Instalação<br>Compatível de Java Encontrada"
+installJavaMessage = "Para iniciar o Minecraft, precisa de uma instalação 64-bit do Java {major}. Deseja que instalemos uma cópia?"
+installJava = "Instalar Java"
+installJavaManually = "Instalar Manualmente"
+javaDownloadPrepare = "A preparar transferência do Java.."
+javaDownloadFailureTitle = "Erro Durante Transferência do Java"
+javaDownloadFailureText = "Veja a consola (CTRL + Shift + i) para mais detalhes."
+javaRequired = "Java Necessário<br>para Iniciar"
+javaRequiredMessage = 'É necessária uma instalação válida x64 do Java {major} para iniciar.<br>'
+javaRequiredDismiss = "Compreendo"
+javaRequiredCancel = "Voltar"
+
+[js.landing.downloadJava]
+findJdkFailure = "Falha ao encontrar distribuição OpenJDK."
+javaDownloadCorruptedError = "O JDK transferido tem um hash incorreto, o ficheiro pode estar corrompido."
+extractingJava = "A extrair Java"
+javaInstalled = "Java Instalado!"
+
+[js.landing.dlAsync]
+loadingServerInfo = "A carregar informações do servidor.."
+fatalError = "Erro Fatal"
+unableToLoadDistributionIndex = "Não foi possível carregar uma cópia do índice de distribuição. Veja a consola (CTRL + Shift + i) para mais detalhes."
+pleaseWait = "Por favor, aguarde.."
+errorDuringLaunchTitle = "Erro Durante o Lançamento"
+seeConsoleForDetails = "Veja a consola (CTRL + Shift + i) para mais detalhes."
+validatingFileIntegrity = "A validar integridade dos ficheiros.."
+errorDuringFileVerificationTitle = "Erro Durante a Verificação de Ficheiros"
+downloadingFiles = "A transferir ficheiros.."
+errorDuringFileDownloadTitle = "Erro Durante a Transferência de Ficheiros"
+preparingToLaunch = "A preparar lançamento.."
+launchingGame = "A iniciar jogo.."
+launchWrapperNotDownloaded = "O ficheiro principal, LaunchWrapper, não foi transferido corretamente. Como resultado, o jogo não pode iniciar.<br><br>Para resolver este problema, desligue temporariamente o seu antivírus e tente iniciar o jogo novamente.<br><br>Se tiver tempo, por favor <a href=\"https://github.com/ManucrackYT/LapsusLauncher/issues\">submeta um problema</a> e diga-nos que antivírus utiliza. Entraremos em contacto com eles e tentaremos resolver a situação."
+doneEnjoyGame = "Concluído. Bom jogo!"
+checkConsoleForDetails = "Por favor veja a consola (CTRL + Shift + i) para mais detalhes."
+
+[js.landing.news]
+checking = "A verificar notícias"
+
+[js.settings.fileSelectors]
+executables = "Executáveis"
+allFiles = "Todos os Ficheiros"
+
+[js.settings.mstfLogin]
+errorTitle = "Algo Correu Mal"
+errorMessage = "A autenticação Microsoft falhou. Por favor, tente novamente."
+okButton = "OK"
+
+[js.settings.mstfLogout]
+errorTitle = "Algo Correu Mal"
+errorMessage = "O logout da Microsoft falhou. Por favor, tente novamente."
+okButton = "OK"
+
+[js.settings.authAccountSelect]
+selectButton = "Selecionar Conta"
+selectedButton = "Conta Selecionada &#10004;"
+
+[js.settings.authAccountLogout]
+lastAccountWarningTitle = "Aviso<br>Esta é a Sua Última Conta"
+lastAccountWarningMessage = "Para usar o launcher deve ter pelo menos uma conta iniciada. Terá de iniciar sessão novamente depois.<br><br>Tem a certeza de que deseja terminar sessão?"
+confirmButton = "Tenho a Certeza"
+cancelButton = "Cancelar"
+
+[js.settings.authAccountPopulate]
+username = "Nome de Utilizador"
+uuid = "UUID"
+selectAccount = "Selecionar Conta"
+selectedAccount = "Conta Selecionada ✓"
+logout = "Terminar Sessão"
+
+[js.settings.dropinMods]
+removeButton = "Remover"
+deleteFailedTitle = "Falha ao Eliminar<br>Mod Drop-in {fullName}"
+deleteFailedMessage = "Certifique-se de que o ficheiro não está a ser usado e tente novamente."
+failedToggleTitle = "Falha ao Alternar<br>Um ou Mais Mods Drop-in"
+okButton = "Ok"
+
+[js.settings.serverListing]
+mainServer = "Servidor Principal"
+
+[js.settings.java]
+selectedJava = "Selecionado: Java {version} ({vendor})"
+invalidSelection = "Seleção Inválida"
+requiresJava = "Requer Java {major} x64."
+availableOptions = "Opções Disponíveis para Java {major} (HotSpot VM)"
+
+[js.settings.about]
+preReleaseTitle = "Pré-lançamento"
+stableReleaseTitle = "Versão Estável"
+releaseNotesFailed = "Falha ao carregar notas de versão."
+
+[js.settings.updates]
+newReleaseTitle = "Nova Versão Disponível"
+newPreReleaseTitle = "Novo Pré-lançamento Disponível"
+downloadingButton = "A transferir.."
+downloadButton = 'Transferir do GitHub<span style="font-size: 10px;color: gray;text-shadow: none !important;">Feche o launcher e execute o dmg para atualizar.</span>'
+latestVersionTitle = "Está a usar a versão mais recente"
+checkForUpdatesButton = "Procurar Atualizações"
+checkingForUpdatesButton = "A procurar atualizações.."
+
+[js.uibinder.startup]
+fatalErrorTitle = "Erro Fatal: Não foi possível Carregar Índice de Distribuição"
+fatalErrorMessage = "Não foi possível estabelecer ligação aos nossos servidores para descarregar o índice de distribuição. Não estavam disponíveis cópias locais.<br><br>O índice de distribuição é um ficheiro essencial que fornece as últimas informações do servidor. O launcher não pode iniciar sem ele. Certifique-se de que está ligado à internet e reinicie a aplicação."
+closeButton = "Fechar"
+
+[js.uibinder.validateAccount]
+failedMessageTitle = "Falha ao Atualizar Login"
+failedMessage = "Não foi possível atualizar o login para <strong>{account}</strong>. Por favor selecione outra conta ou inicie sessão novamente."
+failedMessageSelectAnotherAccount = "Não foi possível atualizar o login para <strong>{account}</strong>. Por favor inicie sessão novamente."
+loginButton = "Iniciar Sessão"
+selectAnotherAccountButton = "Selecionar Outra Conta"
+
+[js.uicore.autoUpdate]
+checkingForUpdateButton = "A procurar atualizações..."
+installNowButton = "Instalar Agora"
+checkForUpdatesButton = "Procurar Atualizações"

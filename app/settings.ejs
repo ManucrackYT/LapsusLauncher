@@ -1,4 +1,99 @@
 <div id="settingsContainer" style="display: none;">
+    <style>
+        #settingsContainer {
+            border-radius: 16px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        #settingsContainer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            background: rgba(255, 255, 255, 0.1);
+            z-index: -1;
+            border-radius: 16px;
+        }
+        
+        #settingsContainerLeft, #settingsContainerRight {
+            border-radius: 16px;
+        }
+        
+        #settingsNavContainer {
+            border-radius: 16px 0 0 16px;
+        }
+        
+        .settingsTab {
+            border-radius: 0 16px 16px 0;
+        }
+        
+        .settingsNavItem, .settingsAddAuthAccount, .settingsFileSelButton, 
+        .settingsSwitchServerButton, .settingsAboutButton, 
+        #settingsDropinFileSystemButton, #settingsShaderpackButton,
+        #settingsUpdateActionButton, #settingsNavDone {
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+        
+        .settingsNavItem:hover, .settingsAddAuthAccount:hover, 
+        .settingsFileSelButton:hover, .settingsSwitchServerButton:hover, 
+        .settingsAboutButton:hover, #settingsDropinFileSystemButton:hover, 
+        #settingsShaderpackButton:hover, #settingsUpdateActionButton:hover,
+        #settingsNavDone:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .settingsAuthAccountTypeContainer, .settingsFieldContainer,
+        #settingsGameResolutionContainer, #settingsMemoryContainer,
+        #settingsJVMOptsContainer, .settingsFileSelContainer,
+        .settingsChangelogContainer, #settingsAboutCurrentContainer,
+        #settingsUpdateStatusContainer {
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            margin: 8px 0;
+            padding: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .toggleSwitch {
+            border-radius: 12px;
+        }
+        
+        .toggleSwitchSlider {
+            border-radius: 10px;
+        }
+        
+        .settingsSelectContainer {
+            border-radius: 8px;
+        }
+        
+        input[type="number"], input[type="text"], #settingsJVMOptsVal {
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .rangeSlider {
+            border-radius: 4px;
+        }
+        
+        .rangeSliderTrack {
+            border-radius: 4px;
+        }
+        
+        #settingsAboutLogo {
+            border-radius: 8px;
+        }
+    </style>
+    
     <div id="settingsContainerLeft">
         <div id="settingsNavContainer">
             <div id="settingsNavHeader">
