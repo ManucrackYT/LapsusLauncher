@@ -537,7 +537,7 @@ async function dlAsync(login = true) {
         serv.rawServer.id
     )
 
-    const forgeData = await distributionIndexProcessor.loadForgeVersionJson(serv)
+    const forgeData = await distributionIndexProcessor.loadModLoaderVersionJson()
     const versionData = await mojangIndexProcessor.getVersionJson()
 
     if(login) {
