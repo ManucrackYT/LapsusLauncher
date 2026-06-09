@@ -41,7 +41,7 @@ loginWithMojang = "Iniciar sesión Offline"
 cancelButton = "Cancelar"
 
 [ejs.overlay]
-serverSelectHeader = "Servidores Disponibles"
+serverSelectHeader = "Versiones Disponibles"
 serverSelectConfirm = "Seleccionar"
 serverSelectCancel = "Cancelar"
 accountSelectHeader = "Seleccionar Cuenta"

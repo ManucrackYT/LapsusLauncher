@@ -41,7 +41,7 @@ loginWithMojang = "離線登入"
 cancelButton = "取消"
 
 [ejs.overlay]
-serverSelectHeader = "可用伺服器"
+serverSelectHeader = "可用版本"
 serverSelectConfirm = "選擇"
 serverSelectCancel = "取消"
 accountSelectHeader = "選擇帳號"

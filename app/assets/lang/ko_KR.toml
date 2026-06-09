@@ -41,7 +41,7 @@ loginWithMojang = "오프라인 로그인"
 cancelButton = "취소"
 
 [ejs.overlay]
-serverSelectHeader = "사용 가능한 서버"
+serverSelectHeader = "사용 가능한 버전"
 serverSelectConfirm = "선택"
 serverSelectCancel = "취소"
 accountSelectHeader = "계정 선택"
