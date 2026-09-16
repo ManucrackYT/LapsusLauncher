@@ -2,9 +2,16 @@
     <div id="serverSelectContent" style="display: none;">
         <span id="serverSelectHeader"><%- lang('overlay.serverSelectHeader') %></span>
         <div id="serverSelectList">
+            <input type="file" id="serverSelectCustomFileInput" accept=".jar,application/java-archive" tabindex="-1" style="display: none;"/>
             <div id="serverSelectListScrollable">
                 <!-- Server listings populated here. -->
             </div>
+            <button id="serverSelectAddCustom" type="button">
+                <svg id="serverSelectAddCustomIcon" viewBox="0 0 24 24" width="12" height="12">
+                    <path d="M12 5v14M5 12h14" style="fill:none;stroke:#fff;stroke-width:2.5;stroke-linecap:round;"/>
+                </svg>
+                <%- lang('overlay.serverSelectAddCustom') %>
+            </button>
         </div>
         <div id="serverSelectActions">
             <button id="serverSelectConfirm" class="overlayKeybindEnter" type="submit"><%- lang('overlay.serverSelectConfirm') %></button>
@@ -30,6 +37,7 @@
     <div id="overlayContent">
         <span id="overlayTitle">Lorem Ipsum:<br>Finis Illud</span>
         <span id="overlayDesc">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud..</span>
+        <input type="text" id="overlayInput" autocomplete="off" spellcheck="false" style="display: none;"/>
         <div id="overlayActionContainer">
             <button id="overlayAcknowledge" class="overlayKeybindEnter">Conare Iterum</button>
             <div id="overlayDismissWrapper">

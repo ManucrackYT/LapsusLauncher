@@ -5,6 +5,7 @@ const path           = require('path')
 
 const ConfigManager  = require('./configmanager')
 const { DistroAPI }  = require('./distromanager')
+const CustomServerManager = require('./customservermanager')
 const LangLoader     = require('./langloader')
 const { LoggerUtil } = require('lapsus-core')
 // eslint-disable-next-line no-unused-vars
@@ -33,7 +34,9 @@ function onDistroLoad(data){
     if(data != null){
         
         // Resolve the selected server if its value has yet to be set.
-        if(ConfigManager.getSelectedServer() == null || data.getServerById(ConfigManager.getSelectedServer()) == null){
+        if(ConfigManager.getSelectedServer() == null
+            || (data.getServerById(ConfigManager.getSelectedServer()) == null
+                && !CustomServerManager.isCustomServer(ConfigManager.getSelectedServer()))){
             logger.info('Determining default selected server..')
             ConfigManager.setSelectedServer(data.getMainServer().rawServer.id)
             ConfigManager.save()

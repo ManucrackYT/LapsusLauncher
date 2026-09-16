@@ -3,6 +3,8 @@ const os     = require('os')
 const semver = require('semver')
 
 const DropinModUtil  = require('./assets/js/dropinmodutil')
+const ModConflictUtil = require('./assets/js/modconflictutil')
+const PackUtil       = require('./assets/js/packutil')
 const { MSFT_OPCODE, MSFT_REPLY_TYPE, MSFT_ERROR } = require('./assets/js/ipcconstants')
 
 const settingsState = {
@@ -327,6 +329,8 @@ function fullSettingsSave() {
     ConfigManager.save()
     saveDropinModConfiguration()
     saveShaderpackSettings()
+    saveResourcePackSettings()
+    saveDataPackSettings()
 }
 
 /* Closes the settings view and saves all data. */
@@ -807,6 +811,7 @@ function bindModsToggleSwitch(){
             } else {
                 document.getElementById(v.getAttribute('formod')).removeAttribute('enabled')
             }
+            refreshDropinModConflicts()
         }
     })
 }
@@ -849,7 +854,9 @@ function _saveModConfiguration(modConf){
 // Drop-in mod elements.
 
 let CACHE_SETTINGS_MODS_DIR
+let CACHE_SETTINGS_MODS_VERSION
 let CACHE_DROPIN_MODS
+let CACHE_MOD_CONFLICTS = []
 
 /**
  * Resolve any located drop-in mods for this server and
@@ -858,6 +865,7 @@ let CACHE_DROPIN_MODS
 async function resolveDropinModsForUI(){
     const serv = (await DistroAPI.getDistribution()).getServerById(ConfigManager.getSelectedServer())
     CACHE_SETTINGS_MODS_DIR = path.join(ConfigManager.getInstanceDirectory(), serv.rawServer.id, 'mods')
+    CACHE_SETTINGS_MODS_VERSION = serv.rawServer.minecraftVersion
     CACHE_DROPIN_MODS = DropinModUtil.scanForDropinMods(CACHE_SETTINGS_MODS_DIR, serv.rawServer.minecraftVersion)
 
     let dropinMods = ''
@@ -883,6 +891,94 @@ async function resolveDropinModsForUI(){
     }
 
     document.getElementById('settingsDropinModsContent').innerHTML = dropinMods
+    refreshDropinModConflicts()
+}
+
+/**
+ * Recompute and render drop-in mod warnings based on the current
+ * UI state of the drop-in mod toggles. Warnings are raised for
+ * duplicate/incompatible mods and for mods not made for the
+ * selected Minecraft version.
+ */
+function refreshDropinModConflicts(){
+    if(CACHE_SETTINGS_MODS_DIR == null || CACHE_DROPIN_MODS == null){
+        return
+    }
+
+    // Reflect the UI toggle state onto the cached mods.
+    for(const dropin of CACHE_DROPIN_MODS){
+        const dropinUI = document.getElementById(dropin.fullName)
+        if(dropinUI != null){
+            dropin.disabled = !dropinUI.hasAttribute('enabled')
+        }
+    }
+
+    CACHE_MOD_CONFLICTS = ModConflictUtil.detectConflicts(CACHE_SETTINGS_MODS_DIR, CACHE_DROPIN_MODS)
+    const versionConflicts = ModConflictUtil.detectVersionConflicts(CACHE_SETTINGS_MODS_DIR, CACHE_DROPIN_MODS, CACHE_SETTINGS_MODS_VERSION)
+
+    const conflictsContainer = document.getElementById('settingsDropinModsConflicts')
+    const conflictedFullNames = new Set()
+    const versionConflictedFullNames = new Set()
+    let conflictStr = ''
+
+    if(CACHE_MOD_CONFLICTS.length > 0){
+        for(const conflict of CACHE_MOD_CONFLICTS){
+            const modNames = conflict.mods.map(mod => {
+                conflictedFullNames.add(mod.fullName)
+                return `<span class="settingsDropinModConflictFile">${mod.fullName}</span>`
+            }).join(', ')
+            const conflictMsg = conflict.source === 'metadata'
+                ? Lang.queryJS('settings.modConflicts.duplicateModId', { modId: conflict.modId })
+                : Lang.queryJS('settings.modConflicts.duplicateFileName')
+            conflictStr += `<div class="settingsDropinModConflict">
+                <div class="settingsDropinModConflictTitle">${conflictMsg}</div>
+                <div class="settingsDropinModConflictFiles">${modNames}</div>
+            </div>`
+        }
+    }
+
+    if(versionConflicts.length > 0){
+        let versionStr = ''
+        for(const conflict of versionConflicts){
+            versionConflictedFullNames.add(conflict.mod.fullName)
+            versionStr += `<div class="settingsDropinModConflict">
+                <div class="settingsDropinModConflictTitle">${conflict.mod.fullName} <span class="settingsDropinModConflictFiles">(${conflict.expected})</span></div>
+            </div>`
+        }
+        conflictStr += `<div class="settingsDropinModConflictWarning version">
+            <div class="settingsDropinModConflictHeader">${Lang.queryJS('settings.modConflicts.incompatibleVersionTitle')}</div>
+            <div class="settingsDropinModConflictDesc">${Lang.queryJS('settings.modConflicts.incompatibleVersion', { selectedVersion: CACHE_SETTINGS_MODS_VERSION })}</div>
+            ${versionStr}
+        </div>`
+    }
+
+    if(conflictStr === ''){
+        conflictsContainer.innerHTML = ''
+        conflictsContainer.setAttribute('hidden', '')
+    } else {
+        conflictsContainer.innerHTML = `<div class="settingsDropinModConflictWarning">
+            <div class="settingsDropinModConflictHeader">${Lang.queryJS('settings.modConflicts.title')}</div>
+            <div class="settingsDropinModConflictDesc">${Lang.queryJS('settings.modConflicts.desc')}</div>
+            ${conflictStr}
+        </div>`
+        conflictsContainer.removeAttribute('hidden')
+    }
+
+    for(const dropin of CACHE_DROPIN_MODS){
+        const dropinUI = document.getElementById(dropin.fullName)
+        if(dropinUI != null){
+            if(conflictedFullNames.has(dropin.fullName)){
+                dropinUI.setAttribute('conflict', '')
+            } else {
+                dropinUI.removeAttribute('conflict')
+            }
+            if(versionConflictedFullNames.has(dropin.fullName)){
+                dropinUI.setAttribute('versionconflict', '')
+            } else {
+                dropinUI.removeAttribute('versionconflict')
+            }
+        }
+    }
 }
 
 /**
@@ -896,6 +992,8 @@ function bindDropinModsRemoveButton(){
             const res = await DropinModUtil.deleteDropinMod(CACHE_SETTINGS_MODS_DIR, fullName)
             if(res){
                 document.getElementById(fullName).remove()
+                CACHE_DROPIN_MODS = CACHE_DROPIN_MODS.filter(mod => mod.fullName !== fullName)
+                refreshDropinModConflicts()
             } else {
                 setOverlayContent(
                     Lang.queryJS('settings.dropinMods.deleteFailedTitle', { fullName }),
@@ -974,6 +1072,10 @@ document.addEventListener('keydown', async (e) => {
             await reloadDropinMods()
             saveShaderpackSettings()
             await resolveShaderpacksForUI()
+            saveResourcePackSettings()
+            await reloadResourcePacks()
+            saveDataPackSettings()
+            await reloadDataPacks()
         }
     }
 })
@@ -1065,6 +1167,374 @@ function bindShaderpackButton() {
     }
 }
 
+// Resource Packs
+
+let CACHE_SETTINGS_RESOURCE_PACKS
+
+/**
+ * Load resource pack information for the selected server.
+ */
+async function resolveResourcePacksForUI(){
+    const serv = (await DistroAPI.getDistribution()).getServerById(ConfigManager.getSelectedServer())
+    CACHE_SETTINGS_INSTANCE_DIR = path.join(ConfigManager.getInstanceDirectory(), serv.rawServer.id)
+    CACHE_SETTINGS_RESOURCE_PACKS = PackUtil.scanForResourcePacks(CACHE_SETTINGS_INSTANCE_DIR)
+
+    let resourcePacksStr = ''
+    if(CACHE_SETTINGS_RESOURCE_PACKS.length === 0){
+        resourcePacksStr = `<div class="settingsPackEmpty">${Lang.queryJS('settings.resourcePacks.empty')}</div>`
+    }
+    for(const pack of CACHE_SETTINGS_RESOURCE_PACKS){
+        resourcePacksStr += `<div id="${pack.fullName}" class="settingsBaseMod settingsResourcePack" ${pack.enabled ? 'enabled' : ''}>
+                    <div class="settingsModContent">
+                        <div class="settingsModMainWrapper">
+                            <div class="settingsModStatus"></div>
+                            <div class="settingsModDetails">
+                                <span class="settingsModName">${pack.name}</span>
+                                <div class="settingsDropinRemoveWrapper">
+                                    <button class="settingsDropinRemoveButton" rempack="${pack.fullName}">${Lang.queryJS('settings.dropinMods.removeButton')}</button>
+                                </div>
+                            </div>
+                        </div>
+                        <label class="toggleSwitch">
+                            <input type="checkbox" forpack="${pack.fullName}" ${pack.enabled ? 'checked' : ''}>
+                            <span class="toggleSwitchSlider"></span>
+                        </label>
+                    </div>
+                </div>`
+    }
+
+    document.getElementById('settingsResourcePacksContent').innerHTML = resourcePacksStr
+}
+
+/**
+ * Bind functionality to the resource pack toggle switches. Toggling
+ * the switch also changes the status color of the pack row.
+ */
+function bindResourcePackToggles(){
+    const sEls = settingsModsContainer.querySelectorAll('[forpack]')
+    Array.from(sEls).map((v, index, arr) => {
+        v.onchange = () => {
+            if(v.checked) {
+                document.getElementById(v.getAttribute('forpack')).setAttribute('enabled', '')
+            } else {
+                document.getElementById(v.getAttribute('forpack')).removeAttribute('enabled')
+            }
+        }
+    })
+}
+
+/**
+ * Bind the remove button for each loaded resource pack.
+ */
+function bindResourcePackRemoveButton(){
+    const sEls = settingsModsContainer.querySelectorAll('[rempack]')
+    Array.from(sEls).map((v, index, arr) => {
+        v.onclick = async () => {
+            const fullName = v.getAttribute('rempack')
+            const res = await PackUtil.deleteResourcePack(CACHE_SETTINGS_INSTANCE_DIR, fullName)
+            if(res){
+                document.getElementById(fullName).remove()
+                CACHE_SETTINGS_RESOURCE_PACKS = CACHE_SETTINGS_RESOURCE_PACKS.filter(pack => pack.fullName !== fullName)
+            } else {
+                setOverlayContent(
+                    Lang.queryJS('settings.resourcePacks.deleteFailedTitle', { fullName }),
+                    Lang.queryJS('settings.resourcePacks.deleteFailedMessage'),
+                    Lang.queryJS('settings.dropinMods.okButton')
+                )
+                setOverlayHandler(null)
+                toggleOverlay(true)
+            }
+        }
+    })
+}
+
+/**
+ * Bind functionality to the resource pack file system button. Clicking
+ * it opens the resourcepacks folder, and packs can be dropped onto it.
+ */
+function bindResourcePackButton() {
+    const rpBtn = document.getElementById('settingsResourcePackButton')
+    rpBtn.onclick = () => {
+        const p = path.join(CACHE_SETTINGS_INSTANCE_DIR, 'resourcepacks')
+        PackUtil.validateDir(p)
+        shell.openPath(p)
+    }
+    rpBtn.ondragenter = e => {
+        e.dataTransfer.dropEffect = 'move'
+        rpBtn.setAttribute('drag', '')
+        e.preventDefault()
+    }
+    rpBtn.ondragover = e => {
+        e.preventDefault()
+    }
+    rpBtn.ondragleave = e => {
+        rpBtn.removeAttribute('drag')
+    }
+
+    rpBtn.ondrop = async e => {
+        rpBtn.removeAttribute('drag')
+        e.preventDefault()
+
+        PackUtil.addResourcePacks(e.dataTransfer.files, CACHE_SETTINGS_INSTANCE_DIR)
+        await reloadResourcePacks()
+    }
+}
+
+/**
+ * Save resource pack states. Enabling and disabling updates the
+ * resourcePacks section of options.txt.
+ */
+function saveResourcePackSettings(){
+    if(CACHE_SETTINGS_RESOURCE_PACKS == null){
+        return
+    }
+    for(const pack of CACHE_SETTINGS_RESOURCE_PACKS){
+        const packUI = document.getElementById(pack.fullName)
+        if(packUI != null){
+            const packUIEnabled = packUI.hasAttribute('enabled')
+            if(PackUtil.isResourcePackEnabled(CACHE_SETTINGS_INSTANCE_DIR, pack.fullName) != packUIEnabled){
+                PackUtil.setResourcePackEnabled(CACHE_SETTINGS_INSTANCE_DIR, pack.fullName, packUIEnabled)
+            }
+        }
+    }
+}
+
+async function reloadResourcePacks(){
+    await resolveResourcePacksForUI()
+    bindResourcePackToggles()
+    bindResourcePackRemoveButton()
+    bindResourcePackButton()
+}
+
+// Data Packs
+
+let CACHE_SETTINGS_DATA_PACKS
+let CACHE_SETTINGS_SELECTED_WORLD
+
+/**
+ * Load data pack information for each world save of the selected
+ * server and populate the results onto the UI.
+ */
+async function resolveDataPacksForUI(){
+    const serv = (await DistroAPI.getDistribution()).getServerById(ConfigManager.getSelectedServer())
+    CACHE_SETTINGS_INSTANCE_DIR = path.join(ConfigManager.getInstanceDirectory(), serv.rawServer.id)
+    CACHE_SETTINGS_DATA_PACKS = PackUtil.scanWorldsForDataPacks(CACHE_SETTINGS_INSTANCE_DIR)
+
+    if(CACHE_SETTINGS_SELECTED_WORLD == null || !CACHE_SETTINGS_DATA_PACKS.some(w => w.name === CACHE_SETTINGS_SELECTED_WORLD)){
+        CACHE_SETTINGS_SELECTED_WORLD = CACHE_SETTINGS_DATA_PACKS.length > 0 ? CACHE_SETTINGS_DATA_PACKS[0].name : null
+    }
+
+    setDataPackWorldsOptions()
+    renderDataPacksContent(CACHE_SETTINGS_DATA_PACKS.find(w => w.name === CACHE_SETTINGS_SELECTED_WORLD))
+}
+
+function setDataPackWorldsOptions(){
+    const cont = document.getElementById('settingsDataPackWorldOptions')
+    const selected = document.getElementById('settingsDataPackWorldSelected')
+    const dpBtn = document.getElementById('settingsDataPackButton')
+    cont.innerHTML = ''
+
+    if(CACHE_SETTINGS_DATA_PACKS.length === 0){
+        selected.innerHTML = Lang.queryJS('settings.dataPacks.noWorlds')
+        dpBtn.disabled = true
+        return
+    }
+
+    dpBtn.disabled = false
+    selected.innerHTML = Lang.queryJS('settings.dataPacks.selectWorld')
+
+    for(const world of CACHE_SETTINGS_DATA_PACKS){
+        const d = document.createElement('DIV')
+        d.innerHTML = world.name
+        d.setAttribute('value', world.name)
+        if(world.name === CACHE_SETTINGS_SELECTED_WORLD){
+            d.setAttribute('selected', '')
+            selected.innerHTML = world.name
+        }
+        d.addEventListener('click', function(e) {
+            this.parentNode.previousElementSibling.innerHTML = this.innerHTML
+            for(let sib of this.parentNode.children){
+                sib.removeAttribute('selected')
+            }
+            this.setAttribute('selected', '')
+            closeSettingsSelect()
+            onDataPackWorldSelect(this.getAttribute('value'))
+        })
+        cont.appendChild(d)
+    }
+}
+
+function onDataPackWorldSelect(worldName){
+    CACHE_SETTINGS_SELECTED_WORLD = worldName
+    renderDataPacksContent(CACHE_SETTINGS_DATA_PACKS.find(w => w.name === worldName))
+    bindDataPackToggles()
+    bindDataPackRemoveButton()
+}
+
+function renderDataPacksContent(world){
+    const content = document.getElementById('settingsDataPacksContent')
+    if(world == null){
+        content.innerHTML = `<div class="settingsPackEmpty">${Lang.queryJS('settings.dataPacks.noWorldsMessage')}</div>`
+        return
+    }
+
+    let dataPacksStr = ''
+    if(world.packs.length === 0){
+        dataPacksStr = `<div class="settingsPackEmpty">${Lang.queryJS('settings.dataPacks.empty')}</div>`
+    }
+    for(const pack of world.packs){
+        const packId = `${world.name}|${pack.fullName}`
+        dataPacksStr += `<div id="${packId}" class="settingsBaseMod settingsDataPack" ${!pack.disabled ? 'enabled' : ''}>
+                    <div class="settingsModContent">
+                        <div class="settingsModMainWrapper">
+                            <div class="settingsModStatus"></div>
+                            <div class="settingsModDetails">
+                                <span class="settingsModName">${pack.name}</span>
+                                <span class="settingsModVersion">${world.name}</span>
+                                <div class="settingsDropinRemoveWrapper">
+                                    <button class="settingsDropinRemoveButton" remdatapack="${packId}">${Lang.queryJS('settings.dropinMods.removeButton')}</button>
+                                </div>
+                            </div>
+                        </div>
+                        <label class="toggleSwitch">
+                            <input type="checkbox" fordatapack="${packId}" ${!pack.disabled ? 'checked' : ''}>
+                            <span class="toggleSwitchSlider"></span>
+                        </label>
+                    </div>
+                </div>`
+    }
+
+    content.innerHTML = dataPacksStr
+}
+
+/**
+ * Bind functionality to the data pack toggle switches. Toggling the
+ * switch also changes the status color of the pack row.
+ */
+function bindDataPackToggles(){
+    const sEls = settingsModsContainer.querySelectorAll('[fordatapack]')
+    Array.from(sEls).map((v, index, arr) => {
+        v.onchange = () => {
+            if(v.checked) {
+                document.getElementById(v.getAttribute('fordatapack')).setAttribute('enabled', '')
+            } else {
+                document.getElementById(v.getAttribute('fordatapack')).removeAttribute('enabled')
+            }
+        }
+    })
+}
+
+/**
+ * Bind the remove button for each loaded data pack.
+ */
+function bindDataPackRemoveButton(){
+    const sEls = settingsModsContainer.querySelectorAll('[remdatapack]')
+    Array.from(sEls).map((v, index, arr) => {
+        v.onclick = async () => {
+            const packId = v.getAttribute('remdatapack')
+            const fullName = packId.substring(packId.indexOf('|') + 1)
+            const world = CACHE_SETTINGS_DATA_PACKS.find(w => w.name === CACHE_SETTINGS_SELECTED_WORLD)
+            if(world == null){
+                return
+            }
+            const res = await PackUtil.deleteDataPack(path.join(CACHE_SETTINGS_INSTANCE_DIR, 'saves', world.name), fullName)
+            if(res){
+                world.packs = world.packs.filter(pack => pack.fullName !== fullName)
+                renderDataPacksContent(world)
+                bindDataPackToggles()
+                bindDataPackRemoveButton()
+            } else {
+                setOverlayContent(
+                    Lang.queryJS('settings.dataPacks.deleteFailedTitle', { fullName }),
+                    Lang.queryJS('settings.dataPacks.deleteFailedMessage'),
+                    Lang.queryJS('settings.dropinMods.okButton')
+                )
+                setOverlayHandler(null)
+                toggleOverlay(true)
+            }
+        }
+    })
+}
+
+/**
+ * Bind functionality to the data pack file system button. Clicking it
+ * opens the datapacks folder of the selected world, and packs can be
+ * dropped onto it.
+ */
+function bindDataPackButton() {
+    const dpBtn = document.getElementById('settingsDataPackButton')
+    dpBtn.onclick = () => {
+        if(CACHE_SETTINGS_SELECTED_WORLD == null){
+            return
+        }
+        const p = path.join(CACHE_SETTINGS_INSTANCE_DIR, 'saves', CACHE_SETTINGS_SELECTED_WORLD, 'datapacks')
+        PackUtil.validateDir(p)
+        shell.openPath(p)
+    }
+    dpBtn.ondragenter = e => {
+        e.dataTransfer.dropEffect = 'move'
+        dpBtn.setAttribute('drag', '')
+        e.preventDefault()
+    }
+    dpBtn.ondragover = e => {
+        e.preventDefault()
+    }
+    dpBtn.ondragleave = e => {
+        dpBtn.removeAttribute('drag')
+    }
+
+    dpBtn.ondrop = async e => {
+        dpBtn.removeAttribute('drag')
+        e.preventDefault()
+
+        if(CACHE_SETTINGS_SELECTED_WORLD == null){
+            return
+        }
+        const worldPath = path.join(CACHE_SETTINGS_INSTANCE_DIR, 'saves', CACHE_SETTINGS_SELECTED_WORLD)
+        PackUtil.addDataPacks(e.dataTransfer.files, worldPath)
+        await reloadDataPacks()
+    }
+}
+
+/**
+ * Save data pack states. Enabling and disabling renames the pack to
+ * add or remove the .disabled extension.
+ */
+function saveDataPackSettings(){
+    if(CACHE_SETTINGS_DATA_PACKS == null){
+        return
+    }
+    for(const world of CACHE_SETTINGS_DATA_PACKS){
+        const worldPath = path.join(CACHE_SETTINGS_INSTANCE_DIR, 'saves', world.name)
+        for(const pack of world.packs){
+            const packUI = document.getElementById(`${world.name}|${pack.fullName}`)
+            if(packUI != null){
+                const packUIEnabled = packUI.hasAttribute('enabled')
+                if(pack.disabled === packUIEnabled){
+                    PackUtil.toggleDataPack(worldPath, pack.fullName, packUIEnabled).catch(err => {
+                        if(!isOverlayVisible()){
+                            setOverlayContent(
+                                Lang.queryJS('settings.dataPacks.failedToggleTitle'),
+                                err.message,
+                                Lang.queryJS('settings.dropinMods.okButton')
+                            )
+                            setOverlayHandler(null)
+                            toggleOverlay(true)
+                        }
+                    })
+                }
+            }
+        }
+    }
+}
+
+async function reloadDataPacks(){
+    await resolveDataPacksForUI()
+    bindDataPackToggles()
+    bindDataPackRemoveButton()
+    bindDataPackButton()
+}
+
 // Server status bar functions.
 
 /**
@@ -1072,10 +1542,11 @@ function bindShaderpackButton() {
  */
 async function loadSelectedServerOnModsTab(){
     const serv = (await DistroAPI.getDistribution()).getServerById(ConfigManager.getSelectedServer())
+    const serverIcon = CustomServerManager.isCustomServer(serv.rawServer.id) && serv.rawServer.icon == null ? CustomServerManager.CUSTOM_SERVER_ICON : serv.rawServer.icon
 
     for(const el of document.getElementsByClassName('settingsSelServContent')) {
         el.innerHTML = `
-            <img class="serverListingImg" src="${serv.rawServer.icon}"/>
+            <img class="serverListingImg" src="${serverIcon}"/>
             <div class="serverListingDetails">
                 <span class="serverListingName">${serv.rawServer.name}</span>
                 <span class="serverListingDescription">${serv.rawServer.description}</span>
@@ -1133,10 +1604,18 @@ async function prepareModsTab(first){
     await resolveModsForUI()
     await resolveDropinModsForUI()
     await resolveShaderpacksForUI()
+    await resolveResourcePacksForUI()
+    await resolveDataPacksForUI()
     bindDropinModsRemoveButton()
     bindDropinModFileSystemButton()
     bindShaderpackButton()
+    bindResourcePackButton()
+    bindDataPackButton()
     bindModsToggleSwitch()
+    bindResourcePackToggles()
+    bindResourcePackRemoveButton()
+    bindDataPackToggles()
+    bindDataPackRemoveButton()
     await loadSelectedServerOnModsTab()
 }
 
@@ -1577,6 +2056,7 @@ async function prepareSettings(first = false) {
     prepareAccountsTab()
     await prepareJavaTab()
     prepareAboutTab()
+    await prepareLogsTab()
 }
 
 // Prepare the settings UI on startup.

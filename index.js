@@ -127,10 +127,6 @@ ipcMain.on('step3Action', (event, arg) => {
     }
 });
 
-// Disable hardware acceleration.
-// https://electronjs.org/docs/tutorial/offscreen-rendering
-app.disableHardwareAcceleration();
-
 const REDIRECT_URI_PREFIX = 'https://login.microsoftonline.com/common/oauth2/nativeclient?';
 
 // Microsoft Auth Login

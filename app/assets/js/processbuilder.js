@@ -9,6 +9,8 @@ const os                    = require('os')
 const path                  = require('path')
 
 const ConfigManager            = require('./configmanager')
+const DropinModUtil            = require('./dropinmodutil')
+const ModConflictUtil          = require('./modconflictutil')
 
 const logger = LoggerUtil.getLogger('ProcessBuilder')
 
@@ -29,6 +31,7 @@ class ProcessBuilder {
 
         this.usingLiteLoader = false
         this.llPath = null
+        this.isCustom = distroServer.rawServer.custom === true
     }
     
     /**
@@ -36,14 +39,16 @@ class ProcessBuilder {
      */
     build(){
         fs.ensureDirSync(this.gameDir)
+        this.warnForModConflicts()
         const tempNativePath = path.join(os.tmpdir(), ConfigManager.getTempNativeFolder(), crypto.pseudoRandomBytes(16).toString('hex'))
         process.throwDeprecation = true
         this.setupLiteLoader()
         logger.info('Using liteloader:', this.usingLiteLoader)
-        const modObj = this.resolveModConfiguration(ConfigManager.getModConfiguration(this.server.rawServer.id).mods, this.server.modules)
+        const modCfg = (ConfigManager.getModConfiguration(this.server.rawServer.id) != null ? ConfigManager.getModConfiguration(this.server.rawServer.id).mods : {}) || {}
+        const modObj = this.resolveModConfiguration(modCfg, this.server.modules)
         
         // Mod list below 1.13
-        if(!mcVersionAtLeast('1.13', this.server.rawServer.minecraftVersion)){
+        if(!this.isCustom && !mcVersionAtLeast('1.13', this.server.rawServer.minecraftVersion)){
             this.constructJSONModList('forge', modObj.fMods, true)
             if(this.usingLiteLoader){
                 this.constructJSONModList('liteloader', modObj.lMods, true)
@@ -53,7 +58,7 @@ class ProcessBuilder {
         const uberModArr = modObj.fMods.concat(modObj.lMods)
         let args = this.constructJVMArguments(uberModArr, tempNativePath)
 
-        if(mcVersionAtLeast('1.13', this.server.rawServer.minecraftVersion)){
+        if(!this.isCustom && mcVersionAtLeast('1.13', this.server.rawServer.minecraftVersion)){
             //args = args.concat(this.constructModArguments(modObj.fMods))
             args = args.concat(this.constructModList(modObj.fMods))
         }
@@ -91,6 +96,28 @@ class ProcessBuilder {
         })
 
         return child
+    }
+
+    /**
+     * Warn about enabled drop-in mods which conflict with each other or
+     * are not made for the selected Minecraft version. Conflicts are
+     * logged, the user is warned in the mods settings tab.
+     */
+    warnForModConflicts(){
+        const modsDir = path.join(this.gameDir, 'mods')
+        const mcVersion = this.server.rawServer.minecraftVersion
+        const dropinMods = DropinModUtil.scanForDropinMods(modsDir, mcVersion)
+        const conflicts = ModConflictUtil.detectConflicts(modsDir, dropinMods)
+
+        for(const conflict of conflicts){
+            const mods = conflict.mods.map(mod => mod.fullName).join(', ')
+            logger.warn(`Conflicting drop-in mods detected (${conflict.modId}): ${mods}`)
+        }
+
+        const versionConflicts = ModConflictUtil.detectVersionConflicts(modsDir, dropinMods, mcVersion)
+        for(const conflict of versionConflicts){
+            logger.warn(`Drop-in mod ${conflict.mod.fullName} is not made for Minecraft ${mcVersion} (expects ${conflict.expected})`)
+        }
     }
 
     /**
@@ -358,10 +385,25 @@ class ProcessBuilder {
         // Main Java Class
         args.push(this.forgeData.mainClass)
 
-        // Forge Arguments
-        args = args.concat(this._resolveForgeArgs())
+        // Launch Arguments
+        if(this.isCustom){
+            args = args.concat(this._resolveVanillaArgs())
+        } else {
+            args = args.concat(this._resolveForgeArgs())
+        }
 
         return args
+    }
+
+    /**
+     * Resolve the arguments required by vanilla (custom versions).
+     * For versions below 1.13 this is the legacy minecraftArguments
+     * string; Forge-specific arguments are intentionally omitted.
+     * 
+     * @returns {Array.<string>} An array containing the arguments required by vanilla.
+     */
+    _resolveVanillaArgs(){
+        return this.resolveMinecraftArguments()
     }
 
     /**
@@ -380,6 +422,14 @@ class ProcessBuilder {
 
         // JVM Arguments First
         let args = this.versionData.arguments.jvm
+
+        // Newer versions redirect the native library directory to a sub
+        // directory of the natives location (e.g. ${natives_directory}/java),
+        // so the native jars must be extracted to the directory that the
+        // declared java.library.path actually points to.
+        const nativesDirectoryArg = (this.versionData.arguments.jvm || []).find(a => typeof a === 'string' && a.indexOf('-Djava.library.path=${natives_directory}') > -1)
+        const nativesSubDir = nativesDirectoryArg != null ? (nativesDirectoryArg.split('${natives_directory}')[1] || '').replace(/^[\\/]+/, '') : null
+        const nativesExtractDir = nativesSubDir != null ? path.join(tempNativePath, nativesSubDir) : tempNativePath
 
         // Debug securejarhandler
         // args.push('-Dbsl.debug=true')
@@ -484,6 +534,12 @@ class ProcessBuilder {
                         case 'auth_access_token':
                             val = this.authUser.accessToken
                             break
+                        case 'clientid':
+                            val = ConfigManager.getClientToken()
+                            break
+                        case 'auth_xuid':
+                            val = this.authUser.type === 'microsoft' ? (this.authUser.xuid != null ? this.authUser.xuid : '') : ''
+                            break
                         case 'user_type':
                             val = this.authUser.type === 'microsoft' ? 'msa' : 'mojang'
                             console.log(this.authUser.type)
@@ -507,7 +563,7 @@ class ProcessBuilder {
                             val = args[i].replace(argDiscovery, this.launcherVersion)
                             break
                         case 'classpath':
-                            val = this.classpathArg(mods, tempNativePath).join(ProcessBuilder.getClasspathSeparator())
+                            val = this.classpathArg(mods, tempNativePath, nativesExtractDir).join(ProcessBuilder.getClasspathSeparator())
                             break
                     }
                     if(val != null){
@@ -518,13 +574,15 @@ class ProcessBuilder {
         }
 
         // Autoconnect
-        let isAutoconnectBroken
-        try {
-            isAutoconnectBroken = ProcessBuilder.isAutoconnectBroken(this.forgeData.id.split('-')[2])
-        } catch(err) {
-            logger.error(err)
-            logger.error('Forge version format changed.. assuming autoconnect works.')
-            logger.debug('Forge version:', this.forgeData.id)
+        let isAutoconnectBroken = false
+        if(!this.isCustom){
+            try {
+                isAutoconnectBroken = ProcessBuilder.isAutoconnectBroken(this.forgeData.id.split('-')[2])
+            } catch(err) {
+                logger.error(err)
+                logger.error('Forge version format changed.. assuming autoconnect works.')
+                logger.debug('Forge version:', this.forgeData.id)
+            }
         }
 
         if(isAutoconnectBroken) {
@@ -547,11 +605,13 @@ class ProcessBuilder {
     }
 
     /**
-     * Resolve the arguments required by forge.
+     * Resolve the legacy minecraft arguments string declared by the version
+     * data. Replaces declared variables with their runtime values and
+     * applies autoconnect and resolution arguments.
      * 
-     * @returns {Array.<string>} An array containing the arguments required by forge.
+     * @returns {Array.<string>} An array containing the resolved minecraft arguments.
      */
-    _resolveForgeArgs(){
+    resolveMinecraftArguments(){
         const mcArgs = this.forgeData.minecraftArguments.split(' ')
         const argDiscovery = /\${*(.*)}/
 
@@ -612,7 +672,18 @@ class ProcessBuilder {
             mcArgs.push('--height')
             mcArgs.push(ConfigManager.getGameHeight())
         }
-        
+
+        return mcArgs
+    }
+
+    /**
+     * Resolve the arguments required by forge.
+     * 
+     * @returns {Array.<string>} An array containing the arguments required by forge.
+     */
+    _resolveForgeArgs(){
+        const mcArgs = this.resolveMinecraftArguments()
+
         // Mod List File Argument
         mcArgs.push('--modListFile')
         if(this._lteMinorVersion(9)) {
@@ -660,14 +731,16 @@ class ProcessBuilder {
      * 
      * @param {Array.<Object>} mods An array of enabled mods which will be launched with this process.
      * @param {string} tempNativePath The path to store the native libraries.
+     * @param {string} [nativesExtractDir] The directory native libraries are extracted to.
      * @returns {Array.<string>} An array containing the paths of each library required by this process.
      */
-    classpathArg(mods, tempNativePath){
+    classpathArg(mods, tempNativePath, nativesExtractDir = tempNativePath){
         let cpArgs = []
 
-        if(!mcVersionAtLeast('1.17', this.server.rawServer.minecraftVersion)) {
-            // Add the version.jar to the classpath.
-            // Must not be added to the classpath for Forge 1.17+.
+        // Add the version.jar to the classpath for vanilla. Forge removes
+        // it from the classpath on 1.17+, but custom (vanilla) versions
+        // above 1.17 still require it to load the game.
+        if(!mcVersionAtLeast('1.17', this.server.rawServer.minecraftVersion) || this.isCustom) {
             const version = this.versionData.id
             cpArgs.push(path.join(this.commonDir, 'versions', version, version + '.jar'))
         }
@@ -678,7 +751,7 @@ class ProcessBuilder {
         }
 
         // Resolve the Mojang declared libraries.
-        const mojangLibs = this._resolveMojangLibraries(tempNativePath)
+        const mojangLibs = this._resolveMojangLibraries(tempNativePath, nativesExtractDir)
 
         // Resolve the server declared libraries.
         const servLibs = this._resolveServerLibraries(mods)
@@ -701,14 +774,16 @@ class ProcessBuilder {
      * TODO - clean up function
      * 
      * @param {string} tempNativePath The path to store the native libraries.
+     * @param {string} [nativesExtractDir] The directory native libraries are extracted to.
      * @returns {{[id: string]: string}} An object containing the paths of each library mojang declares.
      */
-    _resolveMojangLibraries(tempNativePath){
+    _resolveMojangLibraries(tempNativePath, nativesExtractDir = null){
         const nativesRegex = /.+:natives-([^-]+)(?:-(.+))?/
         const libs = {}
 
         const libArr = this.versionData.libraries
-        fs.ensureDirSync(tempNativePath)
+        const extractDir = nativesExtractDir != null ? nativesExtractDir : tempNativePath
+        fs.ensureDirSync(extractDir)
         for(let i=0; i<libArr.length; i++){
             const lib = libArr[i]
             if(isLibraryCompatible(lib.rules, lib.natives)){
@@ -740,7 +815,7 @@ class ProcessBuilder {
 
                         // Extract the file.
                         if(!shouldExclude){
-                            fs.writeFile(path.join(tempNativePath, fileName), zipEntries[i].getData(), (err) => {
+                            fs.writeFile(path.join(extractDir, fileName), zipEntries[i].getData(), (err) => {
                                 if(err){
                                     logger.error('Error while extracting native library:', err)
                                 }
@@ -791,7 +866,7 @@ class ProcessBuilder {
 
                         // Extract the file.
                         if(!shouldExclude){
-                            fs.writeFile(path.join(tempNativePath, extractName), zipEntries[i].getData(), (err) => {
+                            fs.writeFile(path.join(extractDir, extractName), zipEntries[i].getData(), (err) => {
                                 if(err){
                                     logger.error('Error while extracting native library:', err)
                                 }

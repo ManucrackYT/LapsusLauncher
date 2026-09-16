@@ -16,7 +16,9 @@ const {
     FullRepair,
     DistributionIndexProcessor,
     MojangIndexProcessor,
-    downloadFile
+    downloadFile,
+    downloadQueue,
+    getExpectedDownloadSize
 }                             = require('lapsus-core/dl')
 const {
     validateSelectedJvm,
@@ -147,20 +149,20 @@ function updateSelectedAccount(authUser){
     if(authUser != null){
         if(authUser.displayName != null){
             username = authUser.displayName
-            if(authUser.uuid == "4bbdf5ef8cc94f59a69eb96d0eafaa3e"){// Guigame
-                username = "👑" + authUser.displayName;
+            if(authUser.uuid == '4bbdf5ef8cc94f59a69eb96d0eafaa3e'){// Guigame
+                username = '👑' + authUser.displayName
             }
-            if(authUser.uuid == "dc47c29b048c4f069199f8f9ea9554df"){// Tchoupi le boss
-                username = "👑" + authUser.displayName;
+            if(authUser.uuid == 'dc47c29b048c4f069199f8f9ea9554df'){// Tchoupi le boss
+                username = '👑' + authUser.displayName
             }            
-            if(authUser.uuid == "f88fd6e1d33d440f87554630dd67db81"){// mayline42
-                username = "💩" + authUser.displayName;
+            if(authUser.uuid == 'f88fd6e1d33d440f87554630dd67db81'){// mayline42
+                username = '💩' + authUser.displayName
             }
-            if(authUser.uuid == "7242c6fc34b64ef9813cd4e7a973b92a"){// lepaladin
-                username = "💩" + authUser.displayName;
+            if(authUser.uuid == '7242c6fc34b64ef9813cd4e7a973b92a'){// lepaladin
+                username = '💩' + authUser.displayName
             }
-            if(authUser.uuid == "6ac7b55eb6c547caa0b034904a74cb82"){// Flodurigolo
-                username = "🥔" + authUser.displayName;
+            if(authUser.uuid == '6ac7b55eb6c547caa0b034904a74cb82'){// Flodurigolo
+                username = '🥔' + authUser.displayName
             }
         }
 
@@ -467,6 +469,14 @@ async function dlAsync(login = true) {
     toggleLaunchArea(true)
     setLaunchPercentage(0, 100)
 
+    // Custom versions cannot go through the FullRepair receiver (it only
+    // resolves servers from the distribution index), so validate and
+    // download the vanilla client directly.
+    if(serv.rawServer.custom === true){
+        await dlCustom(serv, distro, login)
+        return
+    }
+
     const fullRepairModule = new FullRepair(
         ConfigManager.getCommonDirectory(),
         ConfigManager.getInstanceDirectory(),
@@ -541,88 +551,258 @@ async function dlAsync(login = true) {
     const versionData = await mojangIndexProcessor.getVersionJson()
 
     if(login) {
-        const authUser = ConfigManager.getSelectedAccount()
-        loggerLaunchSuite.info(`Sending selected account (${authUser.displayName}) to ProcessBuilder.`)
-        let pb = new ProcessBuilder(serv, versionData, forgeData, authUser, remote.app.getVersion())
-        setLaunchDetails(Lang.queryJS('landing.dlAsync.launchingGame'))
+        launchGame(serv, versionData, forgeData, distro)
+    }
 
-        // const SERVER_JOINED_REGEX = /\[.+\]: \[CHAT\] [a-zA-Z0-9_]{1,16} joined the game/
-        const SERVER_JOINED_REGEX = new RegExp(`\\[.+\\]: \\[CHAT\\] ${authUser.displayName} joined the game`)
+}
 
-        const onLoadComplete = () => {
-            toggleLaunchArea(false)
-            if(hasRPC){
-                DiscordWrapper.updateDetails('Loading game..')
-                proc.stdout.on('data', gameStateChange)
-            }
-            proc.stdout.removeListener('data', tempListener)
-            proc.stderr.removeListener('data', gameErrorListener)
+/**
+ * Validate and download the vanilla assets, libraries and client for a
+ * user-added custom version. The uploaded jar is only used to identify
+ * the Minecraft version; the matching vanilla client is what gets
+ * downloaded and launched.
+ * 
+ * @param {Object} serv The custom server listing.
+ * @param {Object} distro The resolved distribution.
+ * @param {boolean} login Whether or not to launch the game after downloading.
+ */
+async function dlCustom(serv, distro, login) {
+
+    const loggerLaunchSuite = LoggerUtil.getLogger('LaunchSuite')
+
+    const mojangIndexProcessor = new MojangIndexProcessor(
+        ConfigManager.getCommonDirectory(),
+        serv.rawServer.minecraftVersion)
+
+    loggerLaunchSuite.info('Validating files.')
+    setLaunchDetails(Lang.queryJS('landing.dlAsync.validatingFileIntegrity'))
+    let assets = []
+    try {
+        await mojangIndexProcessor.init()
+        let completedStages = 0
+        const numStages = mojangIndexProcessor.totalStages()
+        const validated = await mojangIndexProcessor.validate(async () => {
+            completedStages++
+            setLaunchPercentage(Math.trunc((completedStages / numStages) * 100))
+        })
+        setLaunchPercentage(100)
+        assets = Object.values(validated).flatMap(asset => asset)
+    } catch (err) {
+        loggerLaunchSuite.error('Error during file validation.')
+        showLaunchFailure(Lang.queryJS('landing.dlAsync.errorDuringFileVerificationTitle'), err.displayable || Lang.queryJS('landing.dlAsync.seeConsoleForDetails'))
+        return
+    }
+
+    if(assets.length > 0) {
+        loggerLaunchSuite.info('Downloading files.')
+        setLaunchDetails(Lang.queryJS('landing.dlAsync.downloadingFiles'))
+        setLaunchPercentage(0)
+        const expectedDownloadSize = getExpectedDownloadSize(assets)
+        try {
+            await downloadQueue(assets, received => {
+                setDownloadPercentage(Math.trunc((received / expectedDownloadSize) * 100))
+            })
+            setDownloadPercentage(100)
+        } catch(err) {
+            loggerLaunchSuite.error('Error during file download.')
+            showLaunchFailure(Lang.queryJS('landing.dlAsync.errorDuringFileDownloadTitle'), err.displayable || Lang.queryJS('landing.dlAsync.seeConsoleForDetails'))
+            return
         }
-        const start = Date.now()
+    } else {
+        loggerLaunchSuite.info('No invalid files, skipping download.')
+    }
 
-        // Attach a temporary listener to the client output.
-        // Will wait for a certain bit of text meaning that
-        // the client application has started, and we can hide
-        // the progress bar stuff.
-        const tempListener = function(data){
-            if(GAME_LAUNCH_REGEX.test(data.trim())){
-                const diff = Date.now()-start
-                if(diff < MIN_LINGER) {
-                    setTimeout(onLoadComplete, MIN_LINGER-diff)
-                } else {
-                    onLoadComplete()
+    // Remove download bar.
+    remote.getCurrentWindow().setProgressBar(-1)
+
+    setLaunchDetails(Lang.queryJS('landing.dlAsync.preparingToLaunch'))
+
+    await mojangIndexProcessor.postDownload()
+
+    const versionData = await mojangIndexProcessor.getVersionJson()
+
+    // Server jars do not declare the java requirement of the vanilla client,
+    // so keep the persisted requirement in sync with the one declared by
+    // Mojang for this exact version. This also self-heals custom versions
+    // that were added before their runtime was resolved.
+    const mjMajor = versionData.javaVersion != null ? versionData.javaVersion.majorVersion : null
+    if(typeof mjMajor === 'number' && mjMajor >= 1){
+        const required = {
+            supported: '>=' + mjMajor + '.x',
+            suggestedMajor: mjMajor
+        }
+        const stored = serv.rawServer.javaOptions
+        if(stored == null || stored.supported !== required.supported){
+            serv.rawServer.javaOptions = {
+                supported: required.supported,
+                suggestedMajor: required.suggestedMajor,
+                distribution: stored != null && stored.distribution != null ? stored.distribution : undefined
+            }
+            CustomServerManager.updateCustomServer(serv.rawServer)
+            ConfigManager.save()
+        }
+        serv.effectiveJavaOptions = CustomServerManager.resolveEffectiveJavaOptions(serv.rawServer.minecraftVersion, serv.rawServer.javaOptions)
+
+        // Make sure the selected JVM satisfies the required runtime. Custom
+        // versions may require a newer runtime than the one resolved before
+        // the version data was known, so clear it and resolve again.
+        const jExe = ConfigManager.getJavaExecutable(serv.rawServer.id)
+        if(jExe != null){
+            const details = await validateSelectedJvm(ensureJavaDirIsRoot(jExe), required.supported)
+            if(details == null){
+                loggerLaunchSuite.warn('Selected JVM does not satisfy Minecraft ' + serv.rawServer.minecraftVersion + ' (requires ' + required.supported + '), resolving again.')
+                ConfigManager.setJavaExecutable(serv.rawServer.id, null)
+                ConfigManager.save()
+                const found = await discoverBestJvmInstallation(ConfigManager.getDataDirectory(), required.supported)
+                if(found != null){
+                    ConfigManager.setJavaExecutable(serv.rawServer.id, javaExecFromRoot(found.path))
+                    ConfigManager.save()
+                } else if(login){
+                    await downloadJava(serv.effectiveJavaOptions, login)
+                    return
                 }
             }
         }
+    }
 
-        // Listener for Discord RPC.
-        const gameStateChange = function(data){
-            data = data.trim()
-            if(SERVER_JOINED_REGEX.test(data)){
-                DiscordWrapper.updateDetails('Exploring the Realm!')
-            } else if(GAME_JOINED_REGEX.test(data)){
-                DiscordWrapper.updateDetails('Sailing to LapsusLauncher!')
-            }
-        }
-
-        const gameErrorListener = function(data){
-            data = data.trim()
-            if(data.indexOf('Could not find or load main class net.minecraft.launchwrapper.Launch') > -1){
-                loggerLaunchSuite.error('Game launch failed, LaunchWrapper was not downloaded properly.')
-                showLaunchFailure(Lang.queryJS('landing.dlAsync.errorDuringLaunchTitle'), Lang.queryJS('landing.dlAsync.launchWrapperNotDownloaded'))
-            }
-        }
-
-        try {
-            // Build Minecraft process.
-            proc = pb.build()
-
-            // Bind listeners to stdout.
-            proc.stdout.on('data', tempListener)
-            proc.stderr.on('data', gameErrorListener)
-
-            setLaunchDetails(Lang.queryJS('landing.dlAsync.doneEnjoyGame'))
-
-            // Init Discord Hook
-            if(distro.rawDistribution.discord != null && serv.rawServerdiscord != null){
-                DiscordWrapper.initRPC(distro.rawDistribution.discord, serv.rawServer.discord)
-                hasRPC = true
-                proc.on('close', (code, signal) => {
-                    loggerLaunchSuite.info('Shutting down Discord Rich Presence..')
-                    DiscordWrapper.shutdownRPC()
-                    hasRPC = false
-                    proc = null
-                })
-            }
-
-        } catch(err) {
-
-            loggerLaunchSuite.error('Error during launch', err)
-            showLaunchFailure(Lang.queryJS('landing.dlAsync.errorDuringLaunchTitle'), Lang.queryJS('landing.dlAsync.checkConsoleForDetails'))
-
+    // Custom versions launch plain vanilla, so synthesize an empty forge
+    // dataset to keep the ProcessBuilder interface identical.
+    const forgeData = {
+        id: versionData.id,
+        mainClass: versionData.mainClass,
+        minecraftArguments: versionData.minecraftArguments != null ? versionData.minecraftArguments : '',
+        arguments: {
+            jvm: [],
+            game: []
         }
     }
 
+    if(login) {
+        launchGame(serv, versionData, forgeData, distro)
+    }
+
+}
+
+/**
+ * Launch the Minecraft process for the given server.
+ * 
+ * @param {Object} serv The server listing.
+ * @param {Object} versionData The Mojang version data.
+ * @param {Object} forgeData The forge/mod data.
+ * @param {Object} distro The resolved distribution.
+ */
+function launchGame(serv, versionData, forgeData, distro) {
+
+    const loggerLaunchSuite = LoggerUtil.getLogger('LaunchSuite')
+
+    const authUser = ConfigManager.getSelectedAccount()
+    loggerLaunchSuite.info(`Sending selected account (${authUser.displayName}) to ProcessBuilder.`)
+    let pb = new ProcessBuilder(serv, versionData, forgeData, authUser, remote.app.getVersion())
+    setLaunchDetails(Lang.queryJS('landing.dlAsync.launchingGame'))
+
+    // const SERVER_JOINED_REGEX = /\[.+\]: \[CHAT\] [a-zA-Z0-9_]{1,16} joined the game/
+    const SERVER_JOINED_REGEX = new RegExp(`\\[.+\\]: \\[CHAT\\] ${authUser.displayName} joined the game`)
+    // Vanilla clients never print a Forge banner, so wait for the first
+    // line of client output instead.
+    const LAUNCH_REGEX = serv.rawServer.custom === true ? /Setting user:/ : GAME_LAUNCH_REGEX
+    // Events used to flavour the Discord presence.
+    const ADVANCEMENT_REGEX = new RegExp(`\\[.+\\]: ${authUser.displayName} has (?:made the advancement|completed the challenge|reached the goal)`)
+    const DEATH_REGEX = new RegExp(`\\[.+\\]: (?:\\[CHAT\\] )?${authUser.displayName} (?:was (?:slain|killed|shot|blown|impaled|pricked|squashed|smashed|fireballed)|died|drowned|fell|blew up|burned|suffocated|starved|withered|hit the ground|went off with a bang)`, 'i')
+    // Reports the target host every time the client joins a multiplayer server.
+    const CONNECTING_REGEX = /\[.+\]: Connecting to (.+?)(?:, \d+)?$/
+    // Only printed by the integrated server, i.e. a genuinely singleplayer world.
+    const SINGLEPLAYER_REGEX = /\[.+\]: (?:Preparing start region for dimension|Preparing spawn area)/
+    // Fires when leaving a server or a singleplayer world back to the menus.
+    const LEAVE_REGEX = /\[.+\]: (?:Logging out of server|Disconnected from server|Lost connection|Connection lost|Stopping integrated server)/
+
+    const onLoadComplete = () => {
+        toggleLaunchArea(false)
+        if(hasRPC){
+            DiscordWrapper.updateDetails(`Playing ${serv.rawServer.name}`)
+            proc.stdout.on('data', gameStateChange)
+        }
+        proc.stdout.removeListener('data', tempListener)
+        proc.stderr.removeListener('data', gameErrorListener)
+    }
+    const start = Date.now()
+
+    // Attach a temporary listener to the client output.
+    // Will wait for a certain bit of text meaning that
+    // the client application has started, and we can hide
+    // the progress bar stuff.
+    const tempListener = function(data){
+        if(LAUNCH_REGEX.test(data.trim())){
+            const diff = Date.now()-start
+            if(diff < MIN_LINGER) {
+                setTimeout(onLoadComplete, MIN_LINGER-diff)
+            } else {
+                onLoadComplete()
+            }
+        }
+    }
+
+    // Listener for Discord RPC.
+    const gameStateChange = function(data){
+        const lines = data.trim().split('\n')
+        for(let i = 0; i < lines.length; i++){
+            const line = lines[i].trim()
+            if(LEAVE_REGEX.test(line)){
+                DiscordWrapper.setInMenu()
+            } else if(SINGLEPLAYER_REGEX.test(line)){
+                DiscordWrapper.setConnectedHost(null)
+            } else if(CONNECTING_REGEX.test(line)){
+                const match = line.match(CONNECTING_REGEX)
+                DiscordWrapper.setConnectedHost(match[1].trim())
+            } else if(SERVER_JOINED_REGEX.test(line)){
+                DiscordWrapper.updateState('Exploring the Realm!')
+            } else if(ADVANCEMENT_REGEX.test(line)){
+                DiscordWrapper.updateState('Achievement unlocked!')
+            } else if(DEATH_REGEX.test(line)){
+                DiscordWrapper.updateState('That escalated quickly!')
+            }
+        }
+    }
+
+    const gameErrorListener = function(data){
+        data = data.trim()
+        if(data.indexOf('Could not find or load main class net.minecraft.launchwrapper.Launch') > -1){
+            loggerLaunchSuite.error('Game launch failed, LaunchWrapper was not downloaded properly.')
+            showLaunchFailure(Lang.queryJS('landing.dlAsync.errorDuringLaunchTitle'), Lang.queryJS('landing.dlAsync.launchWrapperNotDownloaded'))
+        }
+    }
+
+    try {
+        // Build Minecraft process.
+        proc = pb.build()
+
+        // Bind listeners to stdout.
+        proc.stdout.on('data', tempListener)
+        proc.stderr.on('data', gameErrorListener)
+
+        setLaunchDetails(Lang.queryJS('landing.dlAsync.doneEnjoyGame'))
+
+        // Init Discord Hook
+        if(distro.rawDistribution.discord != null && serv.rawServer.discord != null){
+            DiscordWrapper.initRPC(distro.rawDistribution.discord, serv.rawServer.discord, {
+                serverName: serv.rawServer.name,
+                minecraftVersion: serv.rawServer.minecraftVersion,
+                serverAddress: serv.rawServer.address
+            })
+            hasRPC = true
+            proc.on('close', (code, signal) => {
+                loggerLaunchSuite.info('Shutting down Discord Rich Presence..')
+                DiscordWrapper.shutdownRPC()
+                hasRPC = false
+                proc = null
+            })
+        }
+
+    } catch(err) {
+
+        loggerLaunchSuite.error('Error during launch', err)
+        showLaunchFailure(Lang.queryJS('landing.dlAsync.errorDuringLaunchTitle'), Lang.queryJS('landing.dlAsync.checkConsoleForDetails'))
+
+    }
 }
 
 /**

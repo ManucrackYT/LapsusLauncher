@@ -12,9 +12,9 @@
             <div id="rightContainer" style="display: flex; flex-direction: column; align-items: center;">
                 <div id="user_content" style="display: flex; align-items: center; gap: 8px;">
                     <span id="user_text" style="
-                        background: rgba(255, 255, 255, 0.1);
-                        backdrop-filter: blur(10px);
-                        -webkit-backdrop-filter: blur(10px);
+                        background: rgba(255, 255, 255, var(--glass-alpha));
+                        backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+                        -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(160%);
                         border: 1px solid rgba(255, 255, 255, 0.2);
                         border-radius: 12px;
                         padding: 8px 16px;
@@ -29,9 +29,9 @@
                     "><%- lang('landing.usernamePlaceholder') %></span>
                     <div id="avatarContainer">
                         <button id="avatarOverlay" style="
-                            background: rgba(255, 255, 255, 0.1);
-                            backdrop-filter: blur(10px);
-                            -webkit-backdrop-filter: blur(10px);
+                            background: rgba(255, 255, 255, var(--glass-alpha));
+                            backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+                            -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(160%);
                             border: 1px solid rgba(255, 255, 255, 0.2);
                             border-radius: 12px;
                             padding: 8px 16px;
@@ -41,9 +41,9 @@
                     </div>
                 </div>
                 <div id="mediaContent" style="
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, var(--glass-alpha));
+    backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(160%);
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 8px;
     padding: 1px;
@@ -101,9 +101,9 @@
             <div class="bot_wrapper">
                 <div id="content">
                     <div id="mojangStatusWrapper" style="
-                        background: rgba(255, 255, 255, 0.1);
-                        backdrop-filter: blur(10px);
-                        -webkit-backdrop-filter: blur(10px);
+                        background: rgba(255, 255, 255, var(--glass-alpha));
+                        backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+                        -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(160%);
                         border: 1px solid rgba(255, 255, 255, 0.2);
                         border-radius: 12px;
                         padding: 8px 16px;
@@ -113,9 +113,9 @@
                         <span class="bot_label"><%- lang('landing.mojangStatus') %></span>
                         <span id="mojang_status_icon">&#8226;</span>
                         <div id="mojangStatusTooltip" style="
-                            background: rgba(255, 255, 255, 0.1);
-                            backdrop-filter: blur(10px);
-                            -webkit-backdrop-filter: blur(10px);
+                            background: rgba(255, 255, 255, var(--glass-alpha));
+                            backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+                            -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(160%);
                             border: 1px solid rgba(255, 255, 255, 0.2);
                             border-radius: 12px;
                             padding: 16px;
@@ -153,9 +153,9 @@
             <div class="bot_wrapper">
                 <div id="launch_content">
                     <button id="launch_button" style="
-                        background: rgba(255, 255, 255, 0.1);
-                        backdrop-filter: blur(10px);
-                        -webkit-backdrop-filter: blur(10px);
+                        background: rgba(255, 255, 255, var(--glass-alpha));
+                        backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+                        -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(160%);
                         border: 1px solid rgba(255, 255, 255, 0.2);
                         border-radius: 12px;
                         padding: 12px 24px;
@@ -169,9 +169,9 @@
                         background: rgba(255, 255, 255, 0.2);
                     "></div>
                     <button id="server_selection_button" class="bot_label" style="
-                        background: rgba(255, 255, 255, 0.1);
-                        backdrop-filter: blur(10px);
-                        -webkit-backdrop-filter: blur(10px);
+                        background: rgba(255, 255, 255, var(--glass-alpha));
+                        backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+                        -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(160%);
                         border: 1px solid rgba(255, 255, 255, 0.2);
                         border-radius: 12px;
                         padding: 8px 16px;
@@ -187,9 +187,9 @@
                             justify-content: center;
                             min-width: 60px;
                             height: 36px;
-                            background: rgba(255, 255, 255, 0.1);
-                            backdrop-filter: blur(10px);
-                            -webkit-backdrop-filter: blur(10px);
+                            background: rgba(255, 255, 255, var(--glass-alpha));
+                            backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+                            -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(160%);
                             border: 1px solid rgba(255, 255, 255, 0.2);
                             border-radius: 14px;
                             padding: 0 16px;
@@ -207,9 +207,9 @@
                     <div id="launch_details_right">
                         <progress id="launch_progress" value="22" max="100"></progress>
                         <span id="launch_details_text" class="bot_label" style="
-                            background: rgba(255, 255, 255, 0.1);
-                            backdrop-filter: blur(10px);
-                            -webkit-backdrop-filter: blur(10px);
+                            background: rgba(255, 255, 255, var(--glass-alpha));
+                            backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+                            -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(160%);
                             border: 1px solid rgba(255, 255, 255, 0.2);
                             border-radius: 12px;
                             padding: 9px 20px;
@@ -240,9 +240,9 @@
                 </div>
                 <div id="newsNavigationContainer">
                     <button id="newsNavigateLeft" style="
-                        background: rgba(255, 255, 255, 0.1);
-                        backdrop-filter: blur(10px);
-                        -webkit-backdrop-filter: blur(10px);
+                        background: rgba(255, 255, 255, var(--glass-alpha));
+                        backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+                        -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(160%);
                         border: 1px solid rgba(255, 255, 255, 0.2);
                         border-radius: 12px;
                         padding: 8px;
@@ -258,9 +258,9 @@
                     </button>
                     <span id="newsNavigationStatus"><%- lang('landing.newsNavigationStatus', { currentPage: 1, totalPages: 1 }) %></span>
                     <button id="newsNavigateRight" style="
-                        background: rgba(255, 255, 255, 0.1);
-                        backdrop-filter: blur(10px);
-                        -webkit-backdrop-filter: blur(10px);
+                        background: rgba(255, 255, 255, var(--glass-alpha));
+                        backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+                        -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(160%);
                         border: 1px solid rgba(255, 255, 255, 0.2);
                         border-radius: 12px;
                         padding: 8px;
@@ -291,9 +291,9 @@
             <div id="newsErrorFailed" style="display: none;">
                 <span id="nEFailedSpan" class="newsErrorContent"><%- lang('landing.newsErrorFailedSpan') %></span>
                 <button id="newsErrorRetry" style="
-                    background: rgba(255, 255, 255, 0.1);
-                    backdrop-filter: blur(10px);
-                    -webkit-backdrop-filter: blur(10px);
+                    background: rgba(255, 255, 255, var(--glass-alpha));
+                    backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+                    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(160%);
                     border: 1px solid rgba(255, 255, 255, 0.2);
                     border-radius: 12px;
                     padding: 8px 16px;

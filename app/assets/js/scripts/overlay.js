@@ -73,6 +73,7 @@ function toggleOverlay(toggleState, dismissable = false, content = 'overlayConte
         content = dismissable
         dismissable = false
     }
+    $('#overlayContainer').stop(true, true)
     bindOverlayKeys(toggleState, content, dismissable)
     if(toggleState){
         document.getElementById('main').setAttribute('overlay', true)
@@ -175,7 +176,7 @@ document.getElementById('serverSelectConfirm').addEventListener('click', async (
     const listings = document.getElementsByClassName('serverListing')
     for(let i=0; i<listings.length; i++){
         if(listings[i].hasAttribute('selected')){
-            const serv = (await DistroAPI.getDistribution()).getServerById(listings[i].getAttribute('servid'))
+            const serv = await CustomServerManager.getServerListing(listings[i].getAttribute('servid'))
             updateSelectedServer(serv)
             refreshServerStatus(true)
             toggleOverlay(false)
@@ -184,7 +185,7 @@ document.getElementById('serverSelectConfirm').addEventListener('click', async (
     }
     // None are selected? Not possible right? Meh, handle it.
     if(listings.length > 0){
-        const serv = (await DistroAPI.getDistribution()).getServerById(listings[i].getAttribute('servid'))
+        const serv = await CustomServerManager.getServerListing(listings[0].getAttribute('servid'))
         updateSelectedServer(serv)
         toggleOverlay(false)
     }
@@ -233,6 +234,9 @@ function setServerListingHandlers(){
     const listings = Array.from(document.getElementsByClassName('serverListing'))
     listings.map((val) => {
         val.onclick = e => {
+            if(e.target.closest('.serverListingRemove')){
+                return
+            }
             if(val.hasAttribute('selected')){
                 return
             }
@@ -246,6 +250,92 @@ function setServerListingHandlers(){
             document.activeElement.blur()
         }
     })
+}
+
+function setServerListingRemoveHandlers(){
+    const removes = Array.from(document.getElementsByClassName('serverListingRemove'))
+    removes.map((val) => {
+        val.onclick = e => {
+            e.stopPropagation()
+            const servid = val.getAttribute('servid')
+            setOverlayContent(Lang.queryJS('overlay.customConfirmRemoveTitle'), Lang.queryJS('overlay.customConfirmRemoveDesc', { name: val.getAttribute('servname') }), Lang.queryJS('overlay.customConfirmRemove'), Lang.queryJS('overlay.customCancel'))
+            setDismissHandler(() => {
+                toggleOverlay(false)
+                toggleOverlay(true, true, 'serverSelectContent')
+            })
+            setOverlayHandler(async () => {
+                CustomServerManager.removeCustomServer(servid)
+                if(ConfigManager.getSelectedServer() === servid){
+                    updateSelectedServer(null)
+                }
+                toggleOverlay(false)
+                await toggleServerSelection(true)
+            })
+            toggleOverlay(true, true, 'overlayContent')
+        }
+    })
+}
+
+async function handleCustomJarSelection(jarPath, jarName){
+    let minecraftVersion
+    try {
+        minecraftVersion = CustomServerManager.detectMinecraftVersion(jarPath)
+    } catch(err){
+        let message
+        switch(err.message){
+            case CustomServerManager.ERROR_INVALID_JAR:
+                message = Lang.queryJS('overlay.customJarInvalid')
+                break
+            case CustomServerManager.ERROR_NO_VERSION:
+                message = Lang.queryJS('overlay.customJarNoVersion')
+                break
+            default:
+                message = err.message || Lang.queryJS('overlay.customUnknownError')
+        }
+        setOverlayContent(Lang.queryJS('overlay.customAddFailureTitle'), message, Lang.queryJS('overlay.customOkay'))
+        setOverlayHandler(() => {
+            toggleOverlay(false)
+        })
+        toggleOverlay(true, true, 'overlayContent')
+        return
+    }
+    const defaultName = jarName.replace(/\.jar$/i, '').trim() || 'Custom Version'
+    setOverlayContent(Lang.queryJS('overlay.customAddTitle'), Lang.queryJS('overlay.customAddDesc', { version: minecraftVersion }), Lang.queryJS('overlay.customAddConfirm'), Lang.queryJS('overlay.customCancel'))
+    const input = document.getElementById('overlayInput')
+    input.value = defaultName
+    input.style.display = 'block'
+    setTimeout(() => { input.focus(); input.select() }, 100)
+    setDismissHandler(() => {
+        input.style.display = 'none'
+        toggleOverlay(false)
+        toggleOverlay(true, true, 'serverSelectContent')
+    })
+    setOverlayHandler(async () => {
+        const customName = input.value.trim() || defaultName
+        input.style.display = 'none'
+        try {
+            await CustomServerManager.addCustomServer(jarPath, jarName, customName)
+            await toggleServerSelection(true)
+        } catch(addErr){
+            let message
+            switch(addErr.message){
+                case CustomServerManager.ERROR_INVALID_JAR:
+                    message = Lang.queryJS('overlay.customJarInvalid')
+                    break
+                case CustomServerManager.ERROR_NO_VERSION:
+                    message = Lang.queryJS('overlay.customJarNoVersion')
+                    break
+                default:
+                    message = addErr.message || Lang.queryJS('overlay.customUnknownError')
+            }
+            setOverlayContent(Lang.queryJS('overlay.customAddFailureTitle'), message, Lang.queryJS('overlay.customOkay'))
+            setOverlayHandler(() => {
+                toggleOverlay(false)
+            })
+            toggleOverlay(true, true, 'overlayContent')
+        }
+    })
+    toggleOverlay(true, true, 'overlayContent')
 }
 
 function setAccountListingHandlers(){
@@ -273,11 +363,13 @@ async function populateServerListings(){
     const servers = distro.servers
     let htmlString = ''
     for(const serv of servers){
-        htmlString += `<button class="serverListing" servid="${serv.rawServer.id}" ${serv.rawServer.id === giaSel ? 'selected' : ''}>
-            <img class="serverListingImg" src="${serv.rawServer.icon}"/>
+        const custom = serv.rawServer.custom === true
+        const icon = custom && serv.rawServer.icon == null ? CustomServerManager.CUSTOM_SERVER_ICON : serv.rawServer.icon
+        htmlString += `<button class="serverListing ${custom ? 'serverListingCustom' : ''}" servid="${serv.rawServer.id}" ${serv.rawServer.id === giaSel ? 'selected' : ''}>
+            <img class="serverListingImg" src="${icon}"/>
             <div class="serverListingDetails">
                 <span class="serverListingName">${serv.rawServer.name}</span>
-                <span class="serverListingDescription">${serv.rawServer.description}</span>
+                <span class="serverListingDescription">${custom ? Lang.queryJS('overlay.customServerDescription') : serv.rawServer.description}</span>
                 <div class="serverListingInfo">
                     <div class="serverListingVersion">${serv.rawServer.minecraftVersion}</div>
                     <div class="serverListingRevision">${serv.rawServer.version}</div>
@@ -293,10 +385,29 @@ async function populateServerListings(){
                     </div>` : ''}
                 </div>
             </div>
+            ${custom ? `<span class="serverListingRemove" servid="${serv.rawServer.id}" servname="${serv.rawServer.name}" aria-label="${Lang.queryJS('overlay.customRemove')}">
+                <svg viewBox="0 0 24 24" width="12" height="12">
+                    <path d="M6 6l12 12M18 6L6 18" style="fill:none;stroke:#fff;stroke-width:2.5;stroke-linecap:round;"/>
+                </svg>
+            </span>` : ''}
         </button>`
     }
     document.getElementById('serverSelectListScrollable').innerHTML = htmlString
+    setServerListingRemoveHandlers()
+}
 
+function setupCustomServerOption(){
+    document.getElementById('serverSelectAddCustom').addEventListener('click', () => {
+        document.getElementById('serverSelectCustomFileInput').click()
+    })
+    document.getElementById('serverSelectCustomFileInput').addEventListener('change', (e) => {
+        const file = e.target.files[0]
+        if(file == null){
+            return
+        }
+        const jarPath = (() => { try { return require('electron').webUtils.getPathForFile(file) } catch(e) { return typeof file.path === 'string' ? file.path : null } })()
+        handleCustomJarSelection(jarPath, file.name)
+    })
 }
 
 function populateAccountListings(){
@@ -322,3 +433,5 @@ function prepareAccountSelectionList(){
     populateAccountListings()
     setAccountListingHandlers()
 }
+
+setupCustomServerOption()

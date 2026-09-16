@@ -13,9 +13,9 @@
             left: 0;
             right: 0;
             bottom: 0;
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+            -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+            background: rgba(255, 255, 255, var(--glass-alpha));
             z-index: -1;
             border-radius: 16px;
         }
@@ -55,9 +55,7 @@
         .settingsChangelogContainer, #settingsAboutCurrentContainer,
         #settingsUpdateStatusContainer {
             border-radius: 8px;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
+            background: rgba(255, 255, 255, 0.08);
             margin: 8px 0;
             padding: 12px;
             border: 1px solid rgba(255, 255, 255, 0.2);
@@ -92,6 +90,75 @@
         #settingsAboutLogo {
             border-radius: 8px;
         }
+        
+        #settingsReqModsContainer, #settingsOptModsContainer, #settingsDropinModsContainer,
+        #settingsShadersContainer, #settingsResourcePacksContainer, #settingsDataPacksContainer {
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.08);
+            margin: 8px 0;
+            padding: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        #settingsReqModsContent, #settingsOptModsContent, #settingsDropinModsContent,
+        #settingsResourcePacksContent, #settingsDataPacksContent {
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        
+        #settingsTabMods .settingsSelServContainer,
+        .settingsLogsSection {
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        #settingsDropinFileSystemButton, #settingsShaderpackButton,
+        #settingsResourcePackButton, #settingsDataPackButton,
+        #settingsLogsRefresh, #settingsLogsOpenLogs, #settingsLogsOpenCrashes,
+        #settingsLogsCopyLog, #settingsLogsCopyConsole, #settingsLogsCopyCrash {
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        #settingsDropinFileSystemButton:hover, #settingsDropinFileSystemButton:focus, #settingsDropinFileSystemButton[drag],
+        #settingsShaderpackButton:hover, #settingsShaderpackButton:focus, #settingsShaderpackButton[drag],
+        #settingsResourcePackButton:hover, #settingsResourcePackButton:focus, #settingsResourcePackButton[drag],
+        #settingsDataPackButton:hover, #settingsDataPackButton:focus, #settingsDataPackButton[drag] {
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0px 0px 20px rgb(255, 255, 255);
+            text-shadow: 0px 0px 20px white;
+        }
+        
+        .settingsSelectSelected, .settingsSelectOptions, .settingsSelectOptions div {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+        .settingsSelectOptions {
+            border-radius: 0 0 8px 8px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .settingsSelectOptions div:hover, .settingsSelectOptions div[selected] {
+            background: rgba(255, 255, 255, 0.2) !important;
+        }
+        
+        .settingsLogsSectionHeader {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        #settingsLogsSel, .settingsLogOutput {
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        
+        .settingsCrashItem, .settingsCrashMod, .settingsCrashSys {
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
     </style>
     
     <div id="settingsContainerLeft">
@@ -106,6 +173,7 @@
                     <button class="settingsNavItem" rSc="settingsTabMods"><%- lang('settings.navMods') %></button>
                     <button class="settingsNavItem" rSc="settingsTabJava"><%- lang('settings.navJava') %></button>
                     <button class="settingsNavItem" rSc="settingsTabLauncher"><%- lang('settings.navLauncher') %></button>
+                    <button class="settingsNavItem" rSc="settingsTabLogs"><%- lang('settings.navLogs') %></button>
                     <div class="settingsNavSpacer"></div>
                     <button class="settingsNavItem" rSc="settingsTabAbout"><%- lang('settings.navAbout') %></button>
                     <button class="settingsNavItem" rSc="settingsTabUpdate" id="settingsNavUpdate"><%- lang('settings.navUpdates') %></button>
@@ -228,6 +296,7 @@
                 <div id="settingsDropinModsContainer">
                     <div class="settingsModsHeader"><%- lang('settings.dropinMods') %></div>
                     <button id="settingsDropinFileSystemButton"><%- lang('settings.addMods') %> <span id="settingsDropinRefreshNote"><%- lang('settings.dropinRefreshNote') %></span></button>
+                    <div id="settingsDropinModsConflicts" hidden></div>
                     <div id="settingsDropinModsContent">
                         
                     </div>
@@ -243,6 +312,31 @@
 
                             </div>
                         </div>
+                    </div>
+                </div>
+                <br>
+                <div id="settingsResourcePacksContainer">
+                    <div class="settingsModsHeader"><%- lang('settings.resourcePacks') %></div>
+                    <div id="settingsResourcePackDesc"><%- lang('settings.resourcePackDesc') %></div>
+                    <button id="settingsResourcePackButton"><%- lang('settings.addResourcePacks') %> <span id="settingsResourcePackRefreshNote"><%- lang('settings.dropinRefreshNote') %></span></button>
+                    <div id="settingsResourcePacksContent">
+
+                    </div>
+                </div>
+                <div id="settingsDataPacksContainer">
+                    <div class="settingsModsHeader"><%- lang('settings.dataPacks') %></div>
+                    <div id="settingsDataPackDesc"><%- lang('settings.dataPackDesc') %></div>
+                    <div id="settingsDataPackWorldWrapper">
+                        <div class="settingsSelectContainer">
+                            <div class="settingsSelectSelected" id="settingsDataPackWorldSelected"><%- lang('settings.selectWorld') %></div>
+                            <div class="settingsSelectOptions" id="settingsDataPackWorldOptions" hidden>
+
+                            </div>
+                        </div>
+                        <button id="settingsDataPackButton"><%- lang('settings.addDataPacks') %></button>
+                    </div>
+                    <div id="settingsDataPacksContent">
+
                     </div>
                 </div>
             </div>
@@ -386,6 +480,45 @@
                 <div class="settingsFileSelDesc"><%- lang('settings.dataDirectoryDesc') %></div>
             </div>
         </div>
+        <div id="settingsTabLogs" class="settingsTab" style="display: none;">
+            <div class="settingsTabHeader">
+                <span class="settingsTabHeaderText"><%- lang('settings.logsTabHeaderText') %></span>
+                <span class="settingsTabHeaderDesc"><%- lang('settings.logsTabHeaderDesc') %></span>
+            </div>
+            <div class="settingsLogsToolbar">
+                <button id="settingsLogsRefresh" class="settingsLogsButton"><%- lang('settings.logs.refreshButton') %></button>
+                <button id="settingsLogsOpenLogs" class="settingsLogsButton"><%- lang('settings.logs.openLogsFolder') %></button>
+                <button id="settingsLogsOpenCrashes" class="settingsLogsButton"><%- lang('settings.logs.openCrashesFolder') %></button>
+            </div>
+            <div class="settingsLogsSection">
+                <div class="settingsLogsSectionHeader">
+                    <span class="settingsLogsSectionTitle"><%- lang('settings.logs.lastLaunchLog') %></span>
+                    <button id="settingsLogsCopyLog" class="settingsLogsButton settingsLogsCopyButton"><%- lang('settings.logs.copy') %></button>
+                </div>
+                <div class="settingsLogsSelRow">
+                    <select id="settingsLogsSel"></select>
+                    <span id="settingsLogsMeta"></span>
+                </div>
+                <div class="settingsLogOutput" id="settingsLogsView"></div>
+            </div>
+            <div class="settingsLogsSection">
+                <div class="settingsLogsSectionHeader">
+                    <span class="settingsLogsSectionTitle"><%- lang('settings.logs.launcherConsole') %></span>
+                    <button id="settingsLogsCopyConsole" class="settingsLogsButton settingsLogsCopyButton"><%- lang('settings.logs.copy') %></button>
+                </div>
+                <div class="settingsLogOutput" id="settingsConsoleView"></div>
+            </div>
+            <div class="settingsLogsSection">
+                <div class="settingsLogsSectionHeader">
+                    <span class="settingsLogsSectionTitle"><%- lang('settings.logs.crashReports') %></span>
+                    <button id="settingsLogsCopyCrash" class="settingsLogsButton settingsLogsCopyButton"><%- lang('settings.logs.copy') %></button>
+                </div>
+                <div class="settingsCrashContainer">
+                    <div id="settingsCrashList"></div>
+                    <div id="settingsCrashDetail"></div>
+                </div>
+            </div>
+        </div>
         <div id="settingsTabAbout" class="settingsTab" style="display: none;">
             <div class="settingsTabHeader">
                 <span class="settingsTabHeaderText"><%- lang('settings.aboutTabHeaderText') %></span>
@@ -468,4 +601,5 @@
         </div>
     </div>
     <script src="./assets/js/scripts/settings.js"></script>
+    <script src="./assets/js/scripts/logviewer.js"></script>
 </div>

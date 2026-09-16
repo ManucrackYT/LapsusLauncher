@@ -9,6 +9,7 @@ const { Type }      = require('lapsus-distribution-types')
 const AuthManager   = require('./assets/js/authmanager')
 const ConfigManager = require('./assets/js/configmanager')
 const { DistroAPI } = require('./assets/js/distromanager')
+const CustomServerManager = require('./assets/js/customservermanager')
 
 let rscShouldLoad = false
 let fatalStartupError = false

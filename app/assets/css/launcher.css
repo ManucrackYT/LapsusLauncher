@@ -1,6 +1,15 @@
 /* Github Code Highlighting. */
 @import "../../../node_modules/github-syntax-dark/lib/github-dark.css";
 
+/* Liquid Glass global variables.
+ *   --glass-alpha : the translucency of glass surfaces (0 = fully transparent)
+ *   --glass-blur  : the frosted blur radius of glass surfaces.
+ */
+:root {
+    --glass-alpha: 0.05;
+    --glass-blur: 16px;
+}
+
 /*******************************************************************************
  *                                                                             *
  * Fonts                                                                       *
@@ -1061,7 +1070,7 @@ element.style {
     position: relative;
     height: 100%;
     display: flex;
-    background-color: rgba(0, 0, 0, 0.50);
+    background-color: rgba(0, 0, 0, 0.35);
     transition: background-color 0.25s cubic-bezier(.02, .01, .47, 1);
 }
 
@@ -1714,7 +1723,9 @@ input:checked + .toggleSwitchSlider:before {
 /* Mod elements sub-containers. */
 #settingsReqModsContainer,
 #settingsOptModsContainer,
-#settingsDropinModsContainer {
+#settingsDropinModsContainer,
+#settingsResourcePacksContainer,
+#settingsDataPacksContainer {
     padding-bottom: 25px;
 }
 
@@ -1730,7 +1741,9 @@ input:checked + .toggleSwitchSlider:before {
 
 /* Mod elements. */
 .settingsMod,
-.settingsDropinMod {
+.settingsDropinMod,
+.settingsResourcePack,
+.settingsDataPack {
     padding: 10px;
 }
 .settingsSubMod {
@@ -1806,6 +1819,83 @@ input:checked + .toggleSwitchSlider:before {
 /* Wrapper container for all submods. */
 .settingsSubModContainer {
     margin-top: 10px;
+}
+
+/* Mod conflict warning container. */
+#settingsDropinModsConflicts {
+    margin-bottom: 10px;
+}
+
+/* Main conflict warning banner. */
+.settingsDropinModConflictWarning {
+    background: rgba(232, 179, 17, 0.1);
+    border: 1px solid rgba(232, 179, 17, 0.5);
+    border-radius: 3px;
+    color: white;
+    padding: 10px;
+    margin-bottom: 10px;
+    font-size: 12px;
+}
+
+/* Conflict warning banner title. */
+.settingsDropinModConflictHeader {
+    font-weight: bold;
+    color: #e8b311;
+    margin-bottom: 4px;
+}
+
+/* Conflict warning banner description. */
+.settingsDropinModConflictDesc {
+    color: lightgrey;
+    margin-bottom: 8px;
+}
+
+/* Individual conflict group. */
+.settingsDropinModConflict {
+    padding: 6px 0px;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+/* Individual conflict group message. */
+.settingsDropinModConflictTitle {
+    margin-bottom: 2px;
+}
+
+/* Affected mod files within a conflict group. */
+.settingsDropinModConflictFiles {
+    color: #e8b311;
+}
+
+/* Set the status color of a conflicting enabled mod. Must be declared
+after the enabled status rule to take precedence over it. */
+.settingsBaseMod[conflict] > .settingsModContent > .settingsModMainWrapper > .settingsModStatus {
+    background-color: #e8b311;
+}
+
+/* Highlight the rows of drop-in mods involved in a conflict. */
+.settingsDropinMod[conflict] {
+    background: rgba(232, 179, 17, 0.08);
+}
+.settingsDropinMod[conflict] .settingsModName {
+    color: #e8b311;
+}
+
+/* Highlight the rows of drop-in mods built for another Minecraft version. */
+.settingsDropinMod[versionconflict] {
+    background: rgba(232, 73, 61, 0.08);
+}
+.settingsDropinMod[versionconflict] .settingsModName {
+    color: #e8493d;
+}
+
+/* Red accent for the version mismatch warning banner. Must be declared
+after the generic warning styles to take precedence over them. */
+.settingsDropinModConflictWarning.version {
+    background: rgba(232, 73, 61, 0.1);
+    border: 1px solid rgba(232, 73, 61, 0.5);
+}
+.settingsDropinModConflictWarning.version .settingsDropinModConflictHeader {
+    color: #e8493d;
 }
 
 /* Button to open the mods folder for drop-in mods. */
@@ -1968,6 +2058,81 @@ input:checked + .toggleSwitchSlider:before {
 }
 .settingsSelectOptions div:last-child {
     border-bottom: none;
+}
+
+/* Resource pack & data pack section descriptions. */
+#settingsResourcePackDesc,
+#settingsDataPackDesc {
+    font-size: 10px;
+    margin: 10px 0px;
+    color: lightgrey;
+    font-weight: bold;
+    width: 89%;
+}
+
+/* Main action button to add resource packs. */
+#settingsResourcePackButton {
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(126, 126, 126, 0.57);
+    border-radius: 3px;
+    height: 50px;
+    width: 100%;
+    text-align: left;
+    padding: 0px 50px;
+    cursor: pointer;
+    outline: none;
+    transition: 0.25s ease;
+    margin-bottom: 10px;
+}
+#settingsResourcePackButton:hover,
+#settingsResourcePackButton:focus,
+#settingsResourcePackButton[drag] {
+    background: rgba(54, 54, 54, 0.25);
+    text-shadow: 0px 0px 20px white;
+}
+
+/* Refresh instructions on the resource pack button. */
+#settingsResourcePackRefreshNote {
+    font-size: 10px;
+    pointer-events: none;
+}
+
+/* Wrapper container for the data pack world selector. */
+#settingsDataPackWorldWrapper {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+/* Button to open/add data packs for the selected world. */
+#settingsDataPackButton {
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(126, 126, 126, 0.57);
+    border-radius: 3px;
+    cursor: pointer;
+    outline: none;
+    transition: 0.25s ease;
+    font-size: 12px;
+    padding: 10px 16px;
+    margin-left: 5px;
+}
+#settingsDataPackButton:hover,
+#settingsDataPackButton:focus,
+#settingsDataPackButton[drag] {
+    background: rgba(54, 54, 54, 0.25);
+    text-shadow: 0px 0px 20px white;
+}
+#settingsDataPackButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Empty state message for pack lists. */
+.settingsPackEmpty {
+    font-size: 11px;
+    color: grey;
+    padding: 10px;
+    text-align: center;
 }
 
 /* Hover + selected styles. */
@@ -2459,8 +2624,6 @@ input:checked + .toggleSwitchSlider:before {
     transition: background 2s ease;
     overflow-y: hidden;
 }
-
-
 
 /* Upper content container. */
 #landingContainer > #upper {
@@ -3643,6 +3806,26 @@ input:checked + .toggleSwitchSlider:before {
     color: rgba(165, 165, 165, 0.75);
 }
 
+/* Overlay text input (hidden by default; shown for name-prompt flows). */
+#overlayInput {
+    display: none;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.10);
+    border: 1px solid rgba(255, 255, 255, 0.30);
+    border-radius: 4px;
+    color: #fff;
+    font-family: 'Avenir Medium';
+    font-size: 14px;
+    padding: 8px 10px;
+    box-sizing: border-box;
+    outline: none;
+    -webkit-user-select: initial;
+}
+#overlayInput:focus {
+    border-color: rgba(255, 255, 255, 0.60);
+    box-shadow: 0 0 6px rgba(255, 255, 255, 0.20);
+}
+
 /* * *
 * Overlay View (Server + Account Selection Content)
 * * */
@@ -3655,6 +3838,14 @@ input:checked + .toggleSwitchSlider:before {
     justify-content: center;
     align-items: center;
     height: 75%;
+    background: rgba(255, 255, 255, var(--glass-alpha));
+    backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 16px;
+    padding: 25px 40px;
+    box-sizing: border-box;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
 }
 
 /* Server selection header. */
@@ -3700,8 +3891,10 @@ input:checked + .toggleSwitchSlider:before {
 
 /* Content container for a server listing. */
 .serverListing {
-    border: none;
-    padding: 0px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+    padding: 5px;
+    box-sizing: border-box;
     width: 375px;
     min-height: 60px;
     display: flex;
@@ -3711,22 +3904,99 @@ input:checked + .toggleSwitchSlider:before {
     transition: 0.25s ease;
     cursor: pointer;
     position: relative;
-    background: rgba(131, 131, 131, 0.25);
+    background: rgba(255, 255, 255, 0.08);
 }
 .serverListing[selected] {
     cursor: default;
     opacity: 1.0;
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.35);
 }
 .serverListing:hover,
 .serverListing:focus {
     outline: none;
     opacity: 1.0;
+    background: rgba(255, 255, 255, 0.15);
+}
+
+/* Custom version placeholder icon. */
+.serverListingCustomPlaceholder {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
+}
+.serverListingCustomPlaceholder::after {
+    content: "\f12c";
+    font-family: inherit;
+    font-size: 20px;
+    line-height: 38px;
+    text-align: center;
+    display: block;
+    width: 38px;
+    height: 38px;
+    color: #fff;
+}
+/* Remove button inside a custom listing. */
+.serverListingRemove {
+    position: absolute;
+    top: 4px;
+    right: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 90, 90, 0.45);
+    background: rgba(255, 90, 90, 0.15);
+    opacity: 0;
+    transition: opacity 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+    box-sizing: border-box;
+}
+.serverListing:hover .serverListingRemove,
+.serverListing:focus .serverListingRemove {
+    opacity: 1;
+}
+.serverListingRemove:hover,
+.serverListingRemove:focus {
+    outline: none;
+    background: rgba(255, 90, 90, 0.35);
+    border-color: rgba(255, 90, 90, 0.9);
+}
+
+/* Add custom version button. */
+#serverSelectAddCustom {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    margin: 8px 0 0;
+    padding: 7px 0;
+    border: 1px dashed rgba(255, 255, 255, 0.35);
+    border-radius: 8px;
+    background: transparent;
+    color: #fff;
+    font-size: 12px;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease;
+    width: 100%;
+    box-sizing: border-box;
+}
+#serverSelectAddCustom:hover,
+#serverSelectAddCustom:focus {
+    outline: none;
+    background: rgba(255, 255, 255, 0.10);
+    border-color: rgba(255, 255, 255, 0.55);
+}
+#serverSelectAddCustomIcon {
+    flex-shrink: 0;
 }
 
 .accountListing {
     color: white;
-    border: 1px solid rgba(126, 126, 126, 0.57);
-    border-radius: 3px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
     padding: 5px 45px;
     width: 250px;
     display: flex;
@@ -3736,16 +4006,19 @@ input:checked + .toggleSwitchSlider:before {
     transition: 0.25s ease;
     cursor: pointer;
     position: relative;
-    background: rgba(0, 0, 0, 0.25);
+    background: rgba(255, 255, 255, 0.08);
 }
 .accountListing[selected] {
     cursor: default;
     opacity: 1.0;
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.35);
 }
 .accountListing:hover,
 .accountListing:focus {
     outline: none;
     opacity: 1.0;
+    background: rgba(255, 255, 255, 0.15);
 }
 
 .accountListingName {
@@ -3775,6 +4048,13 @@ input:checked + .toggleSwitchSlider:before {
     border: 1px solid #fff;
     height: 50px;
     width: 50px;
+}
+/* Custom version logos (wide banner) letterbox onto a subtle plate instead
+   of being squished to fill the square frame. */
+.serverListingCustom .serverListingImg {
+    object-fit: contain;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
 }
 
 /* Content container for the server listing's details. */
@@ -3815,10 +4095,11 @@ input:checked + .toggleSwitchSlider:before {
     justify-content: center;
     align-items: center;
     line-height: 12px;
-    height: 12px;
-    border-radius: 2px;
-    background: rgba(31, 140, 11, 0.8);
-    padding: 0px 2px;
+    height: 16px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 0px 6px;
 }
 
 /* The revision version of the server's manifest. */
@@ -3880,12 +4161,12 @@ input:checked + .toggleSwitchSlider:before {
 /* Server selection confirm button styles. */
 #serverSelectConfirm,
 #accountSelectConfirm {
-    background: none;
-    border: 1px solid #ffffff;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     color: white;
     font-family: 'Avenir Medium';
     font-weight: bold;
-    border-radius: 2px;
+    border-radius: 8px;
     padding: 0px 8.1px;
     cursor: pointer;
     transition: 0.25s ease;
@@ -3944,6 +4225,7 @@ input:checked + .toggleSwitchSlider:before {
     justify-content: center;
     width: 100%;
     height: calc(100% - 22px);
+    overflow: hidden;
 }
 
 /* Loading content container. */
@@ -4028,4 +4310,318 @@ input:checked + .toggleSwitchSlider:before {
 /* Class which is applied when the spinner image is spinning. */
 .rotating {
     animation: rotating 10s linear infinite;
+}
+
+/* Logs tab toolbar. */
+.settingsLogsToolbar {
+    display: flex;
+    gap: 8px;
+    width: 75%;
+    margin-bottom: 15px;
+}
+
+/* Shared button style for the logs tab. */
+.settingsLogsButton {
+    border: 1px solid rgb(255, 255, 255);
+    color: rgb(255, 255, 255);
+    background: rgba(0, 0, 0, 0.25);
+    font-size: 12px;
+    border-radius: 3px;
+    font-family: 'Avenir Medium';
+    transition: 0.25s ease;
+    cursor: pointer;
+    outline: none;
+    padding: 6px 12px;
+}
+.settingsLogsButton:hover,
+.settingsLogsButton:focus {
+    box-shadow: 0px 0px 20px rgb(255, 255, 255);
+}
+
+/* Log section container. */
+.settingsLogsSection {
+    display: flex;
+    flex-direction: column;
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(126, 126, 126, 0.57);
+    border-radius: 3px;
+    width: 75%;
+    padding: 15px;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+}
+
+/* Log section header row. */
+.settingsLogsSectionHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid rgba(126, 126, 126, 0.57);
+}
+.settingsLogsSectionTitle {
+    font-size: 13px;
+    font-family: 'Avenir Medium';
+}
+.settingsLogsCopyButton {
+    padding: 3px 10px;
+    font-size: 11px;
+}
+
+/* Log file selector row. */
+.settingsLogsSelRow {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    gap: 10px;
+}
+#settingsLogsSel {
+    background: rgba(0, 0, 0, 0.4);
+    color: rgb(255, 255, 255);
+    border: 1px solid rgba(126, 126, 126, 0.57);
+    border-radius: 3px;
+    font-size: 12px;
+    font-family: 'Avenir Book';
+    padding: 4px 6px;
+    outline: none;
+    max-width: 360px;
+}
+#settingsLogsSel:disabled {
+    opacity: 0.5;
+}
+#settingsLogsMeta {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 11px;
+    color: grey;
+    min-width: 0;
+}
+.settingsLogsMetaName {
+    color: rgb(255, 255, 255);
+    font-family: 'Avenir Medium';
+    white-space: nowrap;
+}
+.settingsLogsMetaVal {
+    white-space: nowrap;
+}
+.settingsLogsMetaPath {
+    color: rgba(255, 255, 255, 0.4);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Log output boxes. */
+.settingsLogOutput {
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 3px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 11px;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.9);
+    overflow-y: auto;
+    padding: 10px;
+    white-space: pre-wrap;
+    word-break: break-word;
+    max-height: 260px;
+}
+
+/* Individual rendered log line. */
+.settingsLogLine {
+    display: block;
+    min-height: 1.5em;
+}
+.settingsLogLine.err {
+    color: #ff8a8a;
+}
+.settingsLogLine.warn {
+    color: #ffd47a;
+}
+.settingsLogLine.info {
+    color: #b9d7ff;
+}
+
+/* Empty state message. */
+.settingsLogsEmpty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 60px;
+    color: grey;
+    font-size: 12px;
+    text-align: center;
+    font-family: 'Avenir Book';
+}
+
+/* Crash reports layout. */
+.settingsCrashContainer {
+    display: flex;
+    gap: 15px;
+}
+#settingsCrashList {
+    width: 42%;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-height: 420px;
+    overflow-y: auto;
+}
+#settingsCrashDetail {
+    flex: 1;
+    min-width: 0;
+}
+
+/* Crash report list item. */
+.settingsCrashItem {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(126, 126, 126, 0.57);
+    border-radius: 3px;
+    padding: 8px;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+.settingsCrashItem:hover,
+.settingsCrashItem:focus {
+    box-shadow: 0px 0px 12px rgb(255, 255, 255);
+}
+.settingsCrashItem[selected] {
+    border-color: rgb(255, 255, 255);
+}
+.settingsCrashItemTop {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+.settingsCrashItemName {
+    font-size: 12px;
+    font-family: 'Avenir Medium';
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.settingsCrashItemTime {
+    font-size: 10px;
+    color: grey;
+    white-space: nowrap;
+}
+.settingsCrashItemException {
+    margin-top: 4px;
+    font-size: 11px;
+    color: #ff8a8a;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+/* Crash report detail. */
+.settingsCrashDetailTitle {
+    font-size: 14px;
+    font-family: 'Avenir Medium';
+    margin-bottom: 10px;
+}
+.settingsCrashDetailRow {
+    margin-bottom: 10px;
+}
+.settingsCrashDetailRowFull {
+    margin-top: 14px;
+}
+.settingsCrashDetailLabel {
+    font-size: 11px;
+    color: grey;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+}
+.settingsCrashDetailVal {
+    font-size: 12px;
+    word-break: break-word;
+}
+
+/* Crash hints. */
+.settingsCrashHintWrap {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.settingsCrashHint {
+    background: rgba(255, 212, 122, 0.12);
+    border-left: 3px solid #ffd47a;
+    padding: 6px 10px;
+    font-size: 12px;
+    border-radius: 2px;
+    line-height: 1.45;
+}
+
+/* Detected mods. */
+.settingsCrashModWrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+.settingsCrashMod {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(126, 126, 126, 0.57);
+    border-radius: 3px;
+    padding: 3px 8px;
+    font-size: 11px;
+}
+.settingsCrashMod em {
+    font-style: normal;
+    color: grey;
+    font-size: 10px;
+}
+
+/* System details. */
+.settingsCrashSys {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 3px;
+    padding: 8px;
+    max-height: 180px;
+    overflow-y: auto;
+}
+.settingsCrashSysRow {
+    display: flex;
+    gap: 10px;
+    font-size: 11px;
+    padding: 2px 0;
+}
+.settingsCrashSysKey {
+    color: grey;
+    min-width: 130px;
+    flex-shrink: 0;
+}
+.settingsCrashSysVal {
+    word-break: break-word;
+}
+
+/* Crash stack frames and raw report. */
+.settingsCrashFrames {
+    max-height: 220px;
+}
+.settingsCrashRaw {
+    max-height: 300px;
+    margin-top: 4px;
+}
+
+/* Scrollbars for log outputs. */
+.settingsLogOutput::-webkit-scrollbar,
+#settingsCrashList::-webkit-scrollbar,
+.settingsCrashSys::-webkit-scrollbar {
+    width: 2px;
+}
+.settingsLogOutput::-webkit-scrollbar-track,
+#settingsCrashList::-webkit-scrollbar-track,
+.settingsCrashSys::-webkit-scrollbar-track {
+    display: none;
+}
+.settingsLogOutput::-webkit-scrollbar-thumb,
+#settingsCrashList::-webkit-scrollbar-thumb,
+.settingsCrashSys::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.50);
 }

@@ -2,6 +2,7 @@ const fs   = require('fs-extra')
 const { LoggerUtil } = require('lapsus-core')
 const os   = require('os')
 const path = require('path')
+const crypto = require('crypto')
 const logger = LoggerUtil.getLogger('ConfigManager')
 
 const sysRoot = process.env.APPDATA || (process.platform == 'darwin' ? process.env.HOME + '/Library/Application Support' : process.env.HOME)
@@ -99,6 +100,7 @@ const DEFAULT_CONFIG = {
     selectedServer: null, // Resolved
     selectedAccount: null,
     authenticationDatabase: {},
+    customServers: [],
     modConfigurations: [],
     javaConfig: {}
 }
@@ -263,6 +265,9 @@ exports.getInstanceDirectory = function(){
  * @returns {string} The launcher's Client Token.
  */
 exports.getClientToken = function(){
+    if(config.clientToken == null){
+        config.clientToken = crypto.randomUUID()
+    }
     return config.clientToken
 }
 
@@ -449,6 +454,24 @@ exports.getSelectedAccount = function(){
 }
 
 /**
+ * Get the array of user-added custom server configurations.
+ * 
+ * @returns {Array.<Object>} An array of custom server configurations.
+ */
+exports.getCustomServers = function(){
+    return config.customServers
+}
+
+/**
+ * Set the array of user-added custom server configurations.
+ * 
+ * @param {Array.<Object>} customServers An array of custom server configurations.
+ */
+exports.setCustomServers = function(customServers){
+    config.customServers = customServers
+}
+
+/**
  * Set the selected authenticated account.
  * 
  * @param {string} uuid The UUID of the account which is to be set
@@ -515,9 +538,52 @@ exports.setModConfiguration = function(serverid, configuration){
     cfgs.push(configuration)
 }
 
+/**
+ * Remove the mod configuration for a specific server.
+ * 
+ * @param {string} serverid The id of the server.
+ */
+exports.removeModConfiguration = function(serverid){
+    const cfgs = config.modConfigurations
+    for(let i=0; i<cfgs.length; i++){
+        if(cfgs[i].id === serverid){
+            cfgs.splice(i, 1)
+            return
+        }
+    }
+}
+
+/**
+ * Remove the java configuration for a specific server.
+ * 
+ * @param {string} serverid The id of the server.
+ */
+exports.removeJavaConfig = function(serverid){
+    delete config.javaConfig[serverid]
+}
+
 // User Configurable Settings
 
 // Java Settings
+
+/**
+ * Resolve the java configuration entry for a server. A missing entry
+ * (e.g. from a stale selected server whose custom version was removed)
+ * is created with default values so the settings UI and launch flow
+ * never crash on missing configuration.
+ * 
+ * @param {string} serverid The server id.
+ * @returns {Object} The java configuration entry.
+ */
+function resolveJavaConfigEntry(serverid){
+    if(serverid == null){
+        return defaultJavaConfig({ supported: '8.x', suggestedMajor: 17 })
+    }
+    if(!Object.prototype.hasOwnProperty.call(config.javaConfig, serverid)){
+        config.javaConfig[serverid] = defaultJavaConfig({ supported: '8.x', suggestedMajor: 17 })
+    }
+    return config.javaConfig[serverid]
+}
 
 function defaultJavaConfig(effectiveJavaOptions, ram) {
     if(effectiveJavaOptions.suggestedMajor > 8) {
@@ -578,7 +644,7 @@ exports.ensureJavaConfig = function(serverid, effectiveJavaOptions, ram) {
  * @returns {string} The minimum amount of memory for JVM initialization.
  */
 exports.getMinRAM = function(serverid){
-    return config.javaConfig[serverid].minRAM
+    return resolveJavaConfigEntry(serverid).minRAM
 }
 
 /**
@@ -590,7 +656,7 @@ exports.getMinRAM = function(serverid){
  * @param {string} minRAM The new minimum amount of memory for JVM initialization.
  */
 exports.setMinRAM = function(serverid, minRAM){
-    config.javaConfig[serverid].minRAM = minRAM
+    resolveJavaConfigEntry(serverid).minRAM = minRAM
 }
 
 /**
@@ -602,7 +668,7 @@ exports.setMinRAM = function(serverid, minRAM){
  * @returns {string} The maximum amount of memory for JVM initialization.
  */
 exports.getMaxRAM = function(serverid){
-    return config.javaConfig[serverid].maxRAM
+    return resolveJavaConfigEntry(serverid).maxRAM
 }
 
 /**
@@ -614,7 +680,7 @@ exports.getMaxRAM = function(serverid){
  * @param {string} maxRAM The new maximum amount of memory for JVM initialization.
  */
 exports.setMaxRAM = function(serverid, maxRAM){
-    config.javaConfig[serverid].maxRAM = maxRAM
+    resolveJavaConfigEntry(serverid).maxRAM = maxRAM
 }
 
 /**
@@ -626,7 +692,7 @@ exports.setMaxRAM = function(serverid, maxRAM){
  * @returns {string} The path of the Java Executable.
  */
 exports.getJavaExecutable = function(serverid){
-    return config.javaConfig[serverid].executable
+    return resolveJavaConfigEntry(serverid).executable
 }
 
 /**
@@ -636,7 +702,7 @@ exports.getJavaExecutable = function(serverid){
  * @param {string} executable The new path of the Java Executable.
  */
 exports.setJavaExecutable = function(serverid, executable){
-    config.javaConfig[serverid].executable = executable
+    resolveJavaConfigEntry(serverid).executable = executable
 }
 
 /**
@@ -648,7 +714,7 @@ exports.setJavaExecutable = function(serverid, executable){
  * @returns {Array.<string>} An array of the additional arguments for JVM initialization.
  */
 exports.getJVMOptions = function(serverid){
-    return config.javaConfig[serverid].jvmOptions
+    return resolveJavaConfigEntry(serverid).jvmOptions
 }
 
 /**
@@ -661,7 +727,7 @@ exports.getJVMOptions = function(serverid){
  * initialization.
  */
 exports.setJVMOptions = function(serverid, jvmOptions){
-    config.javaConfig[serverid].jvmOptions = jvmOptions
+    resolveJavaConfigEntry(serverid).jvmOptions = jvmOptions
 }
 
 // Game Settings

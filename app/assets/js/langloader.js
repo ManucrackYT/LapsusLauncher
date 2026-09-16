@@ -17,6 +17,9 @@ exports.query = function(id, placeHolders){
         res = res[q]
     }
     let text = res === lang ? '' : res
+    if (text == null) {
+        text = ''
+    }
     if (placeHolders) {
         Object.entries(placeHolders).forEach(([key, value]) => {
             text = text.replace(`{${key}}`, value)
@@ -214,8 +217,13 @@ exports.setupLanguage = function(){
     const detectedLang = exports.detectSystemLanguage();
     console.log('Detected language:', detectedLang);
     
-    // Load appropriate language file
-    exports.loadLanguage(detectedLang);
+    // English is used as the base so untranslated keys fall back gracefully.
+    exports.loadLanguage('en_US')
+    
+    // Load the detected language on top of the English base.
+    if(detectedLang !== 'en_US') {
+        exports.loadLanguage(detectedLang)
+    }
     
     // Load Custom Language File for Launcher Customizer
     exports.loadLanguage('_custom')
